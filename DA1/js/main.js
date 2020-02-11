@@ -3,18 +3,32 @@
 function make_main_game_state( game )
 {
     function preload() {
-        // Load an image and call it 'logo'.
-        game.load.image( 'logo', 'assets/phaser.png' );
+		
+		game.load.audio('bgm', [
+        'assets/audio/bgm1.ogg',
+        'assets/audio/bgm1.mp3'
+		]);
+		
+        // Load an image and call it 'drphil'.
+        game.load.image( 'drphil', 'assets/img/timbs-png-dr-phil-1.png' );
+		
+		
     }
     
     var bouncy;
+	var music;
     
     function create() {
+		
+		music = game.sound.add('bgm');
+
+		music.play();
+		
         // Create a sprite at the center of the screen using the 'logo' image.
-        bouncy = game.add.sprite( game.world.centerX, game.world.centerY, 'logo' );
+        bouncy = game.add.sprite( game.world.centerX, game.world.centerY, 'drphil' );
         // Anchor the sprite at its center, as opposed to its top-left corner.
         // so it will be truly centered.
-        bouncy.anchor.setTo( 0.5, 0.5 );
+        bouncy.anchor.setTo( .5, .5);
         
         // Turn on the arcade physics engine for this sprite.
         game.physics.enable( bouncy, Phaser.Physics.ARCADE );
@@ -24,8 +38,11 @@ function make_main_game_state( game )
         // Add some text using a CSS style.
         // Center it in X, and position its top 15 pixels from the top of the world.
         var style = { font: "25px Verdana", fill: "#9999ff", align: "center" };
-        var text = game.add.text( game.world.centerX, 15, "Build something amazing.", style );
+        var text = game.add.text( game.world.centerX, 15, "I have been to the ends of the earth.\nI have seen GOD.\nBut most importantly,\nI am the master of JAVASCRIPT,\nand no man can stand up to me\nfor I have become one with the WORLD WIDE WEB", style );
         text.anchor.setTo( 0.5, 0.0 );
+		
+		
+		
     }
     
     function update() {
