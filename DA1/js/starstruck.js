@@ -20,6 +20,16 @@ GameStates.makeGame2 = function( game, shared ) {
 
 	}
 	
+	function quitGame() {
+
+        //  Here you should destroy anything you no longer need.
+        //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
+
+        //  Then let's go back to the main menu.
+        game.state.start('MainMenu');
+
+    }
+	
 	return {
 		create: function() {
 
@@ -61,7 +71,7 @@ GameStates.makeGame2 = function( game, shared ) {
 			cursors = game.input.keyboard.createCursorKeys();
 			jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-		}
+		},
 
 		update: function() {
 
@@ -116,3 +126,4 @@ GameStates.makeGame2 = function( game, shared ) {
 		
 		}
 	};
+}
