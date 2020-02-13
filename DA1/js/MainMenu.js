@@ -23,19 +23,23 @@ GameStates.makeMainMenu = function( game, shared ) {
             //	Naturally I expect you to do something significantly better :)
     
             music = game.add.audio('titleMusic');
-            music.play();
+            music.loopFull();
     
             game.add.sprite(0, 0, 'titlePage');
+			game.add.sprite(0, -125, 'Title');
     
             playButton = game.add.button( 303, 400, 'playButton', startGame, null, 'over', 'out', 'down');
-    
+			
+			
         },
     
         update: function () {
-    
+			//console.log("in main\n");
             //	Do some nice funky main menu effect here
-    
-        }
+			if(!music.isPlaying) {
+				music.play();
+			}
+		}
         
     };
 };

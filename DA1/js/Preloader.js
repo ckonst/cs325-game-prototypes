@@ -11,32 +11,33 @@ GameStates.makePreloader = function( game ) {
     
         preload: function () {
     
-            //	These are the assets we loaded in Boot.js
-            //	A nice sparkly background and a loading progress bar
-            background = game.add.sprite(0, 0, 'preloaderBackground');
-            preloadBar = game.add.sprite(300, 400, 'preloaderBar');
+            //Add loading screen assets
+            background = game.add.sprite(-200, 0, 'preloaderBackground');
+            preloadBar = game.add.sprite(200, 250, 'preloaderBar');
     
             //	This sets the preloadBar sprite as a loader sprite.
             //	What that does is automatically crop the sprite from 0 to full-width
             //	as the files below are loaded in.
             game.load.setPreloadSprite(preloadBar);
     
-            //	Here we load the rest of the assets our game needs.
-            //	As this is just a Project Template I've not provided these assets, swap them for your own.
-            game.load.image('titlePage', 'assets/title.jpg');
-            game.load.atlas('playButton', 'assets/play_button.png', 'assets/play_button.json');
-            game.load.audio('titleMusic', ['assets/Poppers and Prosecco.mp3']);
-            //	+ lots of other required assets here
-            game.load.image( 'logo', 'assets/phaser.png' );
+            // Title Screen Assets
+			game.load.atlas('playButton', 'assets/img/play_button.png', 'assets/img/play_button.json');
+            game.load.audio('titleMusic', ['assets/audio/TitleScreen.ogg']);
+            game.load.image('titlePage', 'assets/img/TitleBG.png');
+			game.load.image('Title', 'assets/img/BCC.png');
 			
-			//starstruck
-			game.load.tilemap('level1', 'assets/starstruck/level1.json', null, Phaser.Tilemap.TILED_JSON);
-			game.load.image('tiles-1', 'assets/starstruck/tiles-1.png');
-			game.load.spritesheet('dude', 'assets/starstruck/dude.png', 32, 48);
-			game.load.spritesheet('droid', 'assets/starstruck/droid.png', 32, 32);
-			game.load.image('starSmall', 'assets/starstruck/star.png');
-			game.load.image('starBig', 'assets/starstruck/star2.png');
-			game.load.image('background', 'assets/starstruck/background2.png');
+            //Main Game assets
+			game.load.audio('GameBGM', ['assets/audio/GameBGM.ogg']);
+			game.load.image('cheese', 'assets/img/biggie-cheese-small.png');
+			game.load.image('cobble', 'assets/img/cobblestone_texture.png');
+			game.load.image('background', 'assets/img/background.png');
+			game.load.image('pepe', 'assets/img/trumpy.png');
+			game.load.image('L', 'assets/img/smallL.png');
+			
+			//Victory Screen
+			game.load.image('Win', 'assets/img/BiggieCheese.jpg');
+			
+			
 			
         },
     
