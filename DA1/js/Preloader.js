@@ -28,6 +28,9 @@ GameStates.makePreloader = function( game ) {
 			
             //Main Game assets
 			game.load.audio('GameBGM', ['assets/audio/GameBGM.ogg']);
+			game.load.audio('shoot', ['assets/audio/shoot.ogg']);
+			game.load.audio('jump', ['assets/audio/jump.ogg']);
+			game.load.audio('death', ['assets/audio/enemy_death2.ogg']);
 			game.load.image('cheese', 'assets/img/biggie-cheese-small.png');
 			game.load.image('cobble', 'assets/img/cobblestone_texture.png');
 			game.load.image('background', 'assets/img/background.png');

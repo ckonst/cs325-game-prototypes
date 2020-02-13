@@ -14,7 +14,7 @@ GameStates.makeGame2 = function( game, shared ) {
 	var bg;
 	var wasd;
 	var jumped;
-	var music;
+	var music, shoot_sound, jump_sound, enemy_death_sound;
 	var platforms;
 	var platform1, platform2, platform3, platform4, platform5, 
 	platform6, platform7, platform8, platform9, platform10;
@@ -67,19 +67,20 @@ GameStates.makeGame2 = function( game, shared ) {
 			game.physics.enable(player, Phaser.Physics.ARCADE);
 			game.physics.enable(enemy, Phaser.Physics.ARCADE);
 			
+			var platform_height = 400;
 			//left platform
-			platform1 = game.add.sprite(0, 325, 'cobble');
-			platform2 = game.add.sprite(32, 325, 'cobble');
-			platform3 = game.add.sprite(64, 325, 'cobble');
-			platform4 = game.add.sprite(96, 325, 'cobble');
-			platform5 = game.add.sprite(128, 325, 'cobble');
+			platform1 = game.add.sprite(0, platform_height, 'cobble');
+			platform2 = game.add.sprite(32, platform_height, 'cobble');
+			platform3 = game.add.sprite(64, platform_height, 'cobble');
+			platform4 = game.add.sprite(96, platform_height, 'cobble');
+			platform5 = game.add.sprite(128, platform_height, 'cobble');
 			
 			//right platform
-			platform6 = game.add.sprite(768, 325, 'cobble');
-			platform7 = game.add.sprite(736, 325, 'cobble');
-			platform8 = game.add.sprite(704, 325, 'cobble');
-			platform9 = game.add.sprite(672, 325, 'cobble');
-			platform10 = game.add.sprite(640, 325, 'cobble');
+			platform6 = game.add.sprite(768, platform_height, 'cobble');
+			platform7 = game.add.sprite(736, platform_height, 'cobble');
+			platform8 = game.add.sprite(704, platform_height, 'cobble');
+			platform9 = game.add.sprite(672, platform_height, 'cobble');
+			platform10 = game.add.sprite(640, platform_height, 'cobble');
 			platforms = [
 				platform1,
 				platform2,
@@ -113,7 +114,13 @@ GameStates.makeGame2 = function( game, shared ) {
 			enemy.body.immovable = true;
 			enemy.body.setSize(180, 180, 10, 10);
 			
+			//audio
 			music = game.add.audio('GameBGM');
+			music.volume = 0.6;
+			shoot_sound = game.add.audio('shoot');
+			shoot_sound.volume = 0.18;
+			jump_sound = game.add.audio('jump');
+			enemy_death_sound = game.add.audio('death');
 
 			game.camera.follow(player);
 
@@ -202,6 +209,7 @@ GameStates.makeGame2 = function( game, shared ) {
 			if(enemy_health < 1) 
 			{
 				//enemy dies
+				enemy_death_sound.play();
 				enemy.destroy();
 				victory = true;
 				music.stop();
@@ -253,6 +261,7 @@ GameStates.makeGame2 = function( game, shared ) {
 			
 			if(shoot_button.isDown && time > projectileTimer)
 			{
+				shoot_sound.play();
 				if(facing === 'right')
 				{
 					L = game.add.sprite(player.x + 100, player.y + 45, 'L');
@@ -280,6 +289,7 @@ GameStates.makeGame2 = function( game, shared ) {
 			
 			if (jumpButton.isDown && onFloor && time > jumpTimer)
 			{
+				jump_sound.play();
 				if(player.body !== null)
 					player.body.velocity.y = -1075; 
 				jumpTimer = time + 300;
