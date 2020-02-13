@@ -33,7 +33,7 @@ GameStates.makePreloader = function( game ) {
 			game.load.audio('death', ['assets/audio/enemy_death2.ogg']);
 			game.load.image('cheese', 'assets/img/biggie-cheese-small.png');
 			game.load.image('cobble', 'assets/img/cobblestone_texture.png');
-			game.load.image('background', 'assets/img/background.png');
+			game.load.image('background', 'assets/img/Background.png');
 			game.load.image('pepe', 'assets/img/trumpy.png');
 			game.load.image('L', 'assets/img/smallL.png');
 			
