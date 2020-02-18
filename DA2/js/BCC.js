@@ -20,6 +20,7 @@ GameStates.makeGame2 = function( game, shared ) {
 	platform6, platform7, platform8, platform9, platform10;
 	var shoot_button;
 	var victory = false;
+	const gravity = 1200
 	
 	function render () {
 
@@ -58,7 +59,7 @@ GameStates.makeGame2 = function( game, shared ) {
 			text2.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
 			text2.setTextBounds(0, 75, 800, 100);
 
-			game.physics.arcade.gravity.y = 1200;
+			game.physics.arcade.gravity.y = gravity;
 			Ls = [];
 			
 			enemy = game.add.sprite(400, 300, 'pepe');
@@ -99,6 +100,7 @@ GameStates.makeGame2 = function( game, shared ) {
 				game.physics.enable(platforms[i], Phaser.Physics.ARCADE);
 				platforms[i].body.allowGravity = false;
 				platforms[i].body.immovable = true;
+				platforms[i].body.setSize(32, 32);
 			}			
 
 			//player.body.bounce.y = 0.2;
@@ -154,19 +156,21 @@ GameStates.makeGame2 = function( game, shared ) {
 				//bullet(s) collided with platform
 				for(var j = 0; j < Ls.length; j++)
 				{
-				if (game.physics.arcade.collide(Ls[j], platforms[i]))
-				{
-					Ls[j].destroy();
-				}
+					if (game.physics.arcade.collide(Ls[j], platforms[i]))
+					{
+						Ls[j].destroy();
+					}
 				}
 			}
 			
 			if(collided){
+				if(player.body.touching.down){
 					player.body.velocity.y = 0;
 					onFloor = true;
 					jumpTimer = 0;
-					console.log('COLLIDE!\n');
 				}
+				console.log('COLLIDE!\n');
+			}
 			var time = game.time.now;
 			if(game.physics.arcade.collide(player, enemy) && time > damage_timer) {
 				//take damage
@@ -286,7 +290,6 @@ GameStates.makeGame2 = function( game, shared ) {
 			{
 				jumped = false;
 			}
-			
 			if (jumpButton.isDown && onFloor && time > jumpTimer)
 			{
 				jump_sound.play();
@@ -300,6 +303,7 @@ GameStates.makeGame2 = function( game, shared ) {
 				if(player.body !== null)
 					player.body.velocity.y = ((jumpTimer + 200  - (game.time.now))/600.0) * (-1075.0);
 			}
+			
 		}		
 	};
 
