@@ -12,31 +12,24 @@ GameStates.makePreloader = function( game ) {
         preload: function () {
     
             //Add loading screen assets
-            background = game.add.sprite(-200, 0, 'preloaderBackground');
-            preloadBar = game.add.sprite(200, 250, 'preloaderBar');
-    
-            //	This sets the preloadBar sprite as a loader sprite.
-            //	What that does is automatically crop the sprite from 0 to full-width
-            //	as the files below are loaded in.
-            game.load.setPreloadSprite(preloadBar);
+            background = game.add.sprite(-150, -80, 'preloaderBackground');
     
             // Title Screen Assets
-			game.load.atlas('playButton', 'assets/img/play_button.png', 'assets/img/play_button.json');
-            game.load.audio('titleMusic', ['assets/audio/TitleScreen.ogg']);
-            game.load.image('titlePage', 'assets/img/TitleBG.png');
-			game.load.image('Title', 'assets/img/BCC.png');
+			game.load.atlas('playButton', 'assets/img/play_button2.png', 'assets/img/play_button.json');
+            game.load.audio('titleMusic', ['assets/audio/TitleScreen2.ogg']);
+            game.load.image('titlePage', 'assets/img/MenuBG.png');
+			game.load.image('Title', 'assets/img/TheHalfwayChild.png');
 			
             //Main Game assets
-			game.load.audio('GameBGM', ['assets/audio/GameBGM.ogg']);
-			game.load.audio('shoot', ['assets/audio/shoot.ogg']);
-			game.load.audio('jump', ['assets/audio/jump.ogg']);
-			game.load.audio('death', ['assets/audio/enemy_death2.ogg']);
-			game.load.image('cheese', 'assets/img/biggie-cheese-small.png');
-			game.load.image('cobble', 'assets/img/cobblestone_texture.png');
-			game.load.image('background', 'assets/img/Background.png');
-			game.load.image('pepe', 'assets/img/trumpy.png');
-			game.load.image('L', 'assets/img/smallL.png');
-			
+			game.load.audio('GameBGM', ['assets/audio/GameBGM2.ogg']);
+			game.load.audio('jump', ['assets/audio/jump2.ogg']);
+			game.load.spritesheet('girl', 'assets/img/girl.png', 64, 64);
+			game.load.tilemap('level1', 'assets/tilemaps/json/level1.json', null, Phaser.Tilemap.TILED_JSON);
+			//game.load.tilemap('level1c', 'assets/tilemaps/json/level1c.json', null, Phaser.Tilemap.TILED_JSON);
+			game.load.image('tiles', 'assets/tilemaps/tiles/foresttiles1.png');
+			game.load.image('front', 'assets/img/forestfront.png');
+			game.load.image('mid', 'assets/img/forestmid.png');
+			game.load.image('back', 'assets/img/forestback.png');
 			//Victory Screen
 			game.load.image('Win', 'assets/img/BiggieCheese.jpg');
 			
@@ -47,7 +40,7 @@ GameStates.makePreloader = function( game ) {
         create: function () {
     
             //	Once the load has finished we disable the crop because we're going to sit in the update loop for a short while as the music decodes
-            preloadBar.cropEnabled = false;
+            //preloadBar.cropEnabled = false;
     
         },
     
