@@ -18,7 +18,6 @@ window.onload = function() {
 	game.state.add( 'MainMenu', GameStates.makeMainMenu( game, shared ) );
 	game.state.add( 'Game1', GameStates.makeGame( game, shared ) );
 	game.state.add( 'Game2', GameStates.makeGame2( game, shared ) );
-	game.state.add( 'Victory', GameStates.makeVictoryScreen( game, shared ) );
 
 
 	//	Now start the Boot state.

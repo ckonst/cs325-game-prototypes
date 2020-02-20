@@ -10,7 +10,6 @@
 	<script src="js/Boot.js"></script>
 	<script src="js/Preloader.js"></script>
 	<script src="js/MainMenu.js"></script>
-	<script src="js/VictoryScreen.js"></script>
 	<script src="js/TheHalfwayChild.js"></script>
 	<script src="js/Game.js"></script>
 	
@@ -33,7 +32,7 @@ body
 <body>
 <div id="game"></div>
 <div id="readme">
-<h2>Biggie Cheese Challenge</h2>
+<h2>The Halfway Child</h2>
 
 <ul>
 <li><strong>Originality:</strong>
@@ -41,71 +40,69 @@ The game uses original design and movement mechanics, original sound and music, 
 </li>
 
 <li><strong>Technical Merit:</strong>
-The jumping system utilizes nonlinear vertical acceleration, timed enemy movement changes, custom damage system with invulnerablity frames, and state switching.
+The jumping system utilizes nonlinear vertical acceleration, platforming created with tilemaps, animations, parallax backgrounds, and state switching.
 </li>
 
 <li><strong>Prototype Postmortem:</strong>
 What did you learn from this prototype?
-I learned a lot about how games are coded in Javascript, and about Javascript itself. I learned about Phaser's api and general structure and that making games
-is really hard even if they are very small.</li>
-<li> The easiest part was actually the actual algorithms of accomplishing the desired effect. I have made a game before so I generally know about coding inside update functions.
-Usually problems I encountered (the hard part) was with trying to figure out Javascript and Phaser (syntax and structure of the program/libraries).
+I learned about the difficulties of generating collision tilemaps(I couldn't get it working how I wanted) and animations (also couldn't get working quite how I wanted)</li>
+<li> The easiest part was the basic mechanic (platforming) and loading in assets. The hardest parts were the animations and collision tilemapping.
 </li>
 
 <li><strong>Prototype Assets:</strong></li>
-<li><a href="https://www.cleanpng.com/png-progress-bar-computer-icons-loading-screen-bar-lin-4953203/download-png.html">Loading bar</a></li>
-<li><a href="https://www.reddit.com/r/wallpapers/comments/4zu8ws/another_8bit_wallpaper/">Menu BG</a></li>
-<li><a href="https://ya-webdesign.com/explore/timbs-png-dr-phil/">Player image, Enemy image</a></li>
-<li><a href="http://i.imgur.com/lZIjk.png"> Platform Tile texture</a></li>
-<li><a href="https://www.cleanpng.com/free/letter-l.html">L projectile image </a></li>
-<li><a href="https://knowyourmeme.com/memes/biggie-cheese>Another Biggie Cheese image</a></li>
+<li><a href="https://forums.tigsource.com/index.php?topic=14166.0">Platforms and plant assets</a></li>
+<li><a href="https://www.reachdynamics.com/contact-us/videoblocks-blue-and-green-stars-on-dark-gradient-background_b-6yb4ppl_thumbnail-full01/">Menu BG</a></li>
+<li><a href="http://gaurav.munjal.us/Universal-LPC-Spritesheet-Character-Generator/">Player animations</a></li>
+<li>All other visual assets: original</li>
 <li>Sound and Music: original</li>
 </li>
 
-<li><strong><a href="https://phaser.io/examples/v2/games/starstruck">Prototype Closest Other Game</a></strong></li>
+<li><strong><a href="https://phaser.io/examples/v2/games/starstruck">Prototype Closest Other Game: starstruck</a></strong></li>
 <li><a href="https://phaser.io/examples/v2/arcade-physics/bounding-box">code also borrowed from</a>
 </li>
 <li><a href="https://phaser.io/examples/v2/text/center-text">and</a></li>
+<li><a href="https://phaser.io/examples/v2/text/display-text-word-by-word">and</a></li>
+<li><a href="https://www.joshmorony.com/how-to-create-a-parallax-background-in-phaser/">and</a></li>
 <li><strong>High Concept:</strong>
-Play as Biggie Cheese and shoot your enemies out of your minecraft base in this action-packed challenge.
+Help the lost girl find her way home in this platformer adventure.
 </li>
 
 <li><strong>Theme:</strong>
-The game does not take itself very seriously. It is a joke game. The theme (if it can be called that) is memes.
+Person who is lost.
 </li>
 
-<li><strong>Mandated Variety:</strong>
-Input includes Jumping, shooting and left-right movement. The enemy moves in accordance to timed cycles (not really random).
-The genre is platformer/shooter. The playstyle is similar to a very basic megaman, i.e. holding down a button to shoot and avoiding getting hit while hitting enemies.
-</li>
+<li><strong>Mandated Variety:</strong></li>
+<li>Inputs: mouse click on the play button at the start.</li>
+<li>Keys: a,d,left,right,space for movement and jumping</li>
+<li>Randomness: deterministic</li>
+<li>Play styles: Explorer, Storyteller, Achiever</li>
+<li>Genres: Platformer, Side-scroller</li>
 
 <li><strong>Prototype Goal:</strong>
 To test jumping, movement, shooting projectiles, hit detection, damage systems, enemy movement.
 </li>
 
 <li><strong>Player Experience Goals:</strong>
-Hopefully the player will be confused and slighly amused. It's important that they can get a good chuckle from this game.
+Hopefully the player will be drawn into the world and its protagonist, and will be challenged by the platforming required to complete the game.
 </li>
 
 <li><strong>Gameplay:</strong>
 Player Actions:
 <li>Movement: WASD or Arrow keys</li>
-<li>Shooting: F</li>
 <li>Jump: Spacebar</li>
-<li>In the main menu use mouse to click the play button. Shoot at the enemy to kill it. Kill the enemy to win the game.</li>
+<li>In the main menu use mouse to click the play button. Get to the end of the level to win the game.</li>
 </li>
 
 <li><strong>Strategies:</strong>
-Jumping into the bottom of the platforms will suspend you in mid-air and will (unintentionally) put you in an advantageous position to kill the intruder.
+If you are looking to beat the game quickly don't take the high path, it's much harder. If you want a challenge, go for it, take your time as well.
 </li>
 
 <li><strong>Story/Setting/Premise:</strong>
-The basic premise is that you are the Biggie Cheese, world renoun musical rat. When you enter into the game, there is a certain intruder that must be repelled from your minecraft base.
-In order to do so, you must hand the intruder FAT Ls. Doing so successfully will result in a victory for the boys.
+The titular Halfway girl wakes up in an unknown forest. Faced with an almost impossible task, she tries to find her way home.
 </li>
 
 <li><strong>Target Audience:</strong>
-People with a fresh sense of humor and an appreciation for memes.
+People with a strong sense of aesthetic and atmosphere, and those who like platformers.
 </li>
 
 <li><strong>Play Time:</strong>

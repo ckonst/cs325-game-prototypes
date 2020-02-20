@@ -1,8 +1,15 @@
 "use strict";
 
 GameStates.makeGame2 = function( game, shared ) {
-
-	var text1, text2, text3;
+	var cs1 = ["When I woke up, I had no idea where I was, or how I got there.", "The straightforward pathway had been lost...",
+	"In this dark forest where I make my sojourn,", "I can only hope that I find a way out."]
+	var cs2 = ["Ahead of me lies a clearing, past that more wood.", "I grow tired and decide to rest for the night."]
+	var line = [];
+	var wordIndex = 0;
+	var lineIndex = 0;
+	var wordDelay = 120;
+	var lineDelay = 400;
+	var text1, text2, text3, text4
 	var player, player_health;
 	var facing = 'left';
 	var jumpTimer = 0, movement_timer_x = 0, movement_timer_y = 0, text_timer = 0, cutscene1_timer = 0;
@@ -16,6 +23,7 @@ GameStates.makeGame2 = function( game, shared ) {
 	var textfade1, textfade2;
 	var map, layer;
 	var back, mid, front;
+	var completed = false;
 	
 	const gravity = 1500;
 	
@@ -33,9 +41,97 @@ GameStates.makeGame2 = function( game, shared ) {
         //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
 		music.stop();	
         player.destroy();
+		text1.destroy();
+		text2.destroy();
+		text3.destroy();
+		text4.destroy();
         game.state.start('MainMenu');
 
     }
+	
+	function nextLine() {
+
+		if (lineIndex === cs1.length)
+		{
+			//  We're finished
+			lineIndex = 0;
+			wordIndex = 0;
+			return;
+		}
+
+		//  Split the current line on spaces, so one word per array element
+		line = cs1[lineIndex].split(' ');
+
+		//  Reset the word index to zero (the first word in the line)
+		wordIndex = 0;
+
+		//  Call the 'nextWord' function once for each word in the line (line.length)
+		game.time.events.repeat(wordDelay, line.length, nextWord, this);
+
+		//  Advance to the next line
+		lineIndex++;
+
+	}
+	function nextWord() {
+
+		//  Add the next word onto the text string, followed by a space
+		text3.text = text3.text.concat(line[wordIndex] + " ");
+
+		//  Advance the word index to the next word in the line
+		wordIndex++;
+
+		//  Last word?
+		if (wordIndex === line.length)
+		{
+			//  Add a carriage return
+			text3.text = text3.text.concat("\n");
+
+			//  Get the next line after the lineDelay amount of ms has elapsed
+			game.time.events.add(lineDelay, nextLine, this);
+		}
+	}
+
+	function nextLine2() {
+
+		if (lineIndex === cs2.length)
+		{
+			//  We're finished
+			lineIndex = 0;
+			wordIndex = 0;
+			return;
+		}
+
+		//  Split the current line on spaces, so one word per array element
+		line = cs2[lineIndex].split(' ');
+
+		//  Reset the word index to zero (the first word in the line)
+		wordIndex = 0;
+
+		//  Call the 'nextWord' function once for each word in the line (line.length)
+		game.time.events.repeat(wordDelay, line.length, nextWord2, this);
+
+		//  Advance to the next line
+		lineIndex++;
+
+		}
+	function nextWord2() {
+
+		//  Add the next word onto the text string, followed by a space
+		text4.text = text4.text.concat(line[wordIndex] + " ");
+
+		//  Advance the word index to the next word in the line
+		wordIndex++;
+
+		//  Last word?
+		if (wordIndex === line.length)
+		{
+			//  Add a carriage return
+			text4.text = text4.text.concat("\n");
+
+			//  Get the next line after the lineDelay amount of ms has elapsed
+			game.time.events.add(lineDelay, nextLine2, this);
+		}
+	}
 	
 	return {
 		create: function() {
@@ -90,6 +186,7 @@ GameStates.makeGame2 = function( game, shared ) {
 			//  layer.debug = true;
 
 			var style = { font: "bold 32px Lucida Console", fill: "#C1EAF0", boundsAlignH: "center", boundsAlignV: "middle" };
+			var style2 = { font: "bold 16px Lucida Console", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle" };	
 			text1 = game.add.text(0, 0, "\[a\] and \[d\] to move\n", style);
 			text1.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
 			text1.setTextBounds(0, 0, 800, 100);
@@ -102,6 +199,11 @@ GameStates.makeGame2 = function( game, shared ) {
 			game.add.tween(text2).to( { alpha: 1.0 }, 2000, "Linear", true);
 			textfade1 = game.add.tween(text1).to( { alpha: 0.0 }, 5000, "Linear", false);
 			textfade2 = game.add.tween(text2).to( { alpha: 0.0 }, 5000, "Linear", false);
+			text3 = game.add.text(32, 512, '', style2);
+			text4 = game.add.text(4096, 512, '', style2);
+			text3.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
+			text4.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
+			nextLine(cs1, text3);
 
 			game.physics.arcade.gravity.y = gravity;
 			
@@ -137,7 +239,7 @@ GameStates.makeGame2 = function( game, shared ) {
 			
 			//audio
 			music = game.add.audio('GameBGM');
-			music.volume = 0.6;
+			music.volume = 1.0;
 			jump_sound = game.add.audio('jump');
 			music.loopFull();	
 
@@ -161,8 +263,7 @@ GameStates.makeGame2 = function( game, shared ) {
 						player.animations.play('right', 18 , true);
 						return;
 					}
-					if(player.animations.frame !== 0);
-						player.animations.play('awaken', 6, false);
+					player.animations.play('awaken', 6, false);
 					return;
 				}
 			if(!text1)
@@ -173,6 +274,16 @@ GameStates.makeGame2 = function( game, shared ) {
 						textfade2.start();
 						text1 = true;
 					}	
+			}
+			if(player.body.x >= 4288)
+			{
+				if(!completed)
+				{
+					//game completed, quit game
+					nextLine2();
+					game.time.events.add(6000, quitGame, this);
+					completed = true;
+				}
 			}
 			
 			var onFloor = player.body.onFloor();

@@ -25,13 +25,10 @@ GameStates.makePreloader = function( game ) {
 			game.load.audio('jump', ['assets/audio/jump2.ogg']);
 			game.load.spritesheet('girl', 'assets/img/girl.png', 64, 64);
 			game.load.tilemap('level1', 'assets/tilemaps/json/level1.json', null, Phaser.Tilemap.TILED_JSON);
-			//game.load.tilemap('level1c', 'assets/tilemaps/json/level1c.json', null, Phaser.Tilemap.TILED_JSON);
 			game.load.image('tiles', 'assets/tilemaps/tiles/foresttiles1.png');
 			game.load.image('front', 'assets/img/forestfront.png');
 			game.load.image('mid', 'assets/img/forestmid.png');
 			game.load.image('back', 'assets/img/forestback.png');
-			//Victory Screen
-			game.load.image('Win', 'assets/img/BiggieCheese.jpg');
 			
 			
 			
