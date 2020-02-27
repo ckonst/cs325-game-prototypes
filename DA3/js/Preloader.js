@@ -16,7 +16,7 @@ GameStates.makePreloader = function( game ) {
     
             // Title Screen Assets
 			game.load.atlas('playButton', 'assets/img/play_button3.png', 'assets/img/play_button3.json');
-            game.load.audio('titleMusic', 'assets/audio/TitleScreen3.ogg');
+            game.load.audio('titleMusic', 'assets/audio/titleScreen3.ogg');
             game.load.image('titlePage', 'assets/img/MenuBG.png');
 			
             //Main Game assets
