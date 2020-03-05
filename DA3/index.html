@@ -33,26 +33,26 @@ body
 <body>
 <div id="game"></div>
 <div id="readme">
-<h2>The Halfway Child</h2>
+<h2>The Laundromat</h2>
 
 <ul>
 <li><strong>Originality:</strong>
-The game uses original design and movement mechanics, original sound and music, as well as an original story told through gameplay.
+The game uses original design and mechanics, original sound, and original music.
 </li>
 
 <li><strong>Technical Merit:</strong>
-The jumping system utilizes nonlinear vertical acceleration, platforming created with tilemaps, animations, parallax backgrounds, and state switching.
+The game implements text scrolling, audio feedback, collision detection for various objects, and a spawning and cleanup system for clothing objects.
 </li>
 
 <li><strong>Prototype Postmortem:</strong>
-What did you learn from this prototype?
-I learned about the difficulties of generating collision tilemaps(I couldn't get it working how I wanted) and animations (also couldn't get working quite how I wanted)</li>
-<li> The easiest part was the basic mechanic (platforming) and loading in assets. The hardest parts were the animations and collision tilemapping.
+I learned about the difficulties of making objects in Javascript and couldn't figure it out so I had to do it a silly way instead.</li>
+<li> The easiest part was the movements, and the hardest was the creation of different objects (which I failed miserably to do). </li>
+<li> I also spent way too much time on the assets
 </li>
 
 <li><strong>Prototype Assets:</strong></li>
-<li><a href="https://forums.tigsource.com/index.php?topic=14166.0">Platforms and plant assets</a></li>
-<li><a href="https://www.reachdynamics.com/contact-us/videoblocks-blue-and-green-stars-on-dark-gradient-background_b-6yb4ppl_thumbnail-full01/">Menu BG</a></li>
+<li><a href="https://3dwarehouse.sketchup.com/model/8b689104-1b03-4add-b6b4-44983e89bc24/Samsung-Washing-Machine">Link 1</a></li>
+<li><a href="https://www.google.com/imgres?imgurl=https%3A%2F%2Fp7.hiclipart.com%2Fpreview%2F289%2F309%2F261%2Flong-sleeved-t-shirt-hand-painted-pure-white-t-shirt-vector-thumbnail.jpg&imgrefurl=https%3A%2F%2Fwww.hiclipart.com%2Ffree-transparent-background-png-clipart-ixrjr&tbnid=mQgbJSF18aBT-M&vet=12ahUKEwiYvvesj_DnAhXnVd8KHdz6BUoQMygjegQIARBo..i&docid=eBWieZeG-lW2vM&w=300&h=353&q=cartoon%20clothes%20png&ved=2ahUKEwiYvvesj_DnAhXnVd8KHdz6BUoQMygjegQIARBo">Link 2</a></li>
 <li><a href="http://gaurav.munjal.us/Universal-LPC-Spritesheet-Character-Generator/">Player animations</a></li>
 <li>All other visual assets: original</li>
 <li>Sound and Music: original</li>
@@ -61,49 +61,57 @@ I learned about the difficulties of generating collision tilemaps(I couldn't get
 <li><strong><a href="https://phaser.io/examples/v2/games/starstruck">Prototype Closest Other Game: starstruck</a></strong></li>
 <li><a href="https://phaser.io/examples/v2/arcade-physics/bounding-box">code also borrowed from</a>
 </li>
-<li><a href="https://phaser.io/examples/v2/text/center-text">and</a></li>
-<li><a href="https://phaser.io/examples/v2/text/display-text-word-by-word">and</a></li>
-<li><a href="https://www.joshmorony.com/how-to-create-a-parallax-background-in-phaser/">and</a></li>
+<li><a href="https://favpng.com/png_view/mens-jeans-png-image-jeans-t-shirt-clothing-denim-png/mys2mihf">Link 3</a></li>
+<li><a href="https://imgbin.com/png/1brbDBvQ/pants-jeans-t-shirt-cartoon-png">Link 4</a></li>
+<li><a href="https://www.cleanpng.com/png-white-pants-jeans-grey-motocross-877007/preview.html">Link 5</a></li>
+<li><a href="https://www.seekpng.com/ipng/u2w7e6w7e6e6q8w7_black-underwear-meundies-boxers/">Link 6</a></li>
+<li><a href="https://www.uihere.com/free-cliparts/search?q=anime+Panties">Link 7</a></li>
+<li><a href="http://clipart-library.com/blank-tshirt.html">Link 8</a></li>
+<li><a href="https://clipartix.com/pants-clipart/">Link 9</a></li>
+<li><a href="http://pluspng.com/png-153807.html">Link 10</a></li>
+<li><a href="https://www.shutterstock.com/search/laundry+basket+cartoon">Link 11</a></li>
 <li><strong>High Concept:</strong>
-Help the lost girl find her way home in this platformer adventure.
+Help washy the cartoon washing machine sort clothes into baskets.
 </li>
 
 <li><strong>Theme:</strong>
-Person who is lost.
+Laundromat.
 </li>
 
 <li><strong>Mandated Variety:</strong></li>
-<li>Inputs: mouse click on the play button at the start.</li>
-<li>Keys: a,d,left,right,space for movement and jumping</li>
-<li>Randomness: deterministic</li>
-<li>Play styles: Explorer, Storyteller, Achiever</li>
-<li>Genres: Platformer, Side-scroller</li>
+<li>Inputs: Left mouse click on the play button at the start. Left mouse click on clothes and washing machines.</li>
+<li>Randomness: a lot of Randomness (clothing spawns and velocities)</li>
+<li>Play styles: Achiever, Joker, Collector</li>
+<li>Genres: puzzle, adventure</li>
 
 <li><strong>Prototype Goal:</strong>
-To test jumping, movement, shooting projectiles, hit detection, damage systems, enemy movement.
+To test UI, (pseudo) random spawning and velocities, clicking mechanics, text updates and management, audio feedback management.
 </li>
 
-<li><strong>Player Experience Goals:</strong>
-Hopefully the player will be drawn into the world and its protagonist, and will be challenged by the platforming required to complete the game.
+<li><strong>Player Experience Goals:</strong></li>
+<li>The player will have a good laugh while trying to figure out why the game is a buggy mess. Also have a fun time with audio feedback.
 </li>
 
 <li><strong>Gameplay:</strong>
 Player Actions:
-<li>Movement: WASD or Arrow keys</li>
-<li>Jump: Spacebar</li>
-<li>In the main menu use mouse to click the play button. Get to the end of the level to win the game.</li>
+<li>Drag Laundry: Left Mouse Button</li>
+<li>Load Laundry into Washers: Left Mouse Button</li>
+<li>In the main menu use mouse to click the play button. Get as many points as possible by sorting the clothing that washy throws you.</li>
 </li>
 
 <li><strong>Strategies:</strong>
-If you are looking to beat the game quickly don't take the high path, it's much harder. If you want a challenge, go for it, take your time as well.
+There are more red clothes than any other color, so keep track of those.
+</li>
+<li>Keep track of whites as well because washing whites successfully rewards more points</li>
+<li>Avoid mixing whites with non-whites, do so loses a lot of points. Don't wash babies, they will lose you a lot of points too.
 </li>
 
 <li><strong>Story/Setting/Premise:</strong>
-The titular Halfway girl wakes up in an unknown forest. Faced with an almost impossible task, she tries to find her way home.
+Washy needs help sorting clothes into baskets and washing them.
 </li>
 
 <li><strong>Target Audience:</strong>
-People with a strong sense of aesthetic and atmosphere, and those who like platformers.
+People who like memes, and have a good sense of humor.
 </li>
 
 <li><strong>Play Time:</strong>
