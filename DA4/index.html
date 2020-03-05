@@ -1,0 +1,126 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<link rel="icon" href="data:;base64,=">
+	<meta charset="UTF-8" />
+	<title>Phaser Basic Project Template</title>
+	<script src="js/phaser.min.js"></script>
+	<!-- Boot.js must come first since it creates the BasicGame object
+	that stores all the states. -->
+	<script src="js/Boot.js"></script>
+	<script src="js/Preloader.js"></script>
+	<script src="js/MainMenu.js"></script>
+	<script src="js/COC.js"></script>
+	<script src="js/EndScreen.js"></script>
+	
+	<!-- main.js must come last since it references the other ones. -->
+	<script src="js/main.js"></script>
+
+<style>
+body
+{
+    color: #777;
+    font-family: "Avenir", Verdana, sans-serif;
+}
+#readme
+{
+    margin-top: 10px;
+}
+</style>
+
+</head>
+<body>
+<div id="game"></div>
+<div id="readme">
+<h2>Chicken Omega Challenge</h2>
+
+<ul>
+<li><strong>Originality:</strong>
+The game uses original design and enemy phase mechanics as well as original sound and music.
+</li>
+
+<li><strong>Technical Merit:</strong></li>
+<li>There are enemy 3 phases that change enmy projectile size and speed. The enemy boss uses sinusoidal movement patterns,</li>
+<li>there is audio feedback for phase changes as well as shooting and taking damage for both the player and enemy. There is also randomly selected player projectile sprites and state switching.
+</li>
+
+<li><strong>Prototype Postmortem:</strong>
+What did you learn from this prototype?
+I learned how planning everything out and keeping it simple will go a long way to making a game run smoothly.</li>
+<li> The easiest (but tedious) part was the assets. After the last game I made, I learned how to make pixel images from normal images, so I already knew that beforehand this time around
+</li>
+<li>
+The hard part was debugging and getting sprites to show up, but this time I had a clear idea that was not too large in scope to be able to create.
+</li>
+
+
+<li><strong>Prototype Assets:</strong></li>
+<li><a href="https://forums.tigsource.com/index.php?topic=14166.0">Platforms and plant assets</a></li>
+<li><a href="https://www.reachdynamics.com/contact-us/videoblocks-blue-and-green-stars-on-dark-gradient-background_b-6yb4ppl_thumbnail-full01/">Menu BG</a></li>
+<li><a href="http://gaurav.munjal.us/Universal-LPC-Spritesheet-Character-Generator/">Player animations</a></li>
+<li>All other visual assets: original</li>
+<li>Sound and Music: original</li>
+</li>
+
+<li><strong><a href="https://phaser.io/examples/v2/games/starstruck">Prototype Closest Other Game: starstruck</a></strong></li>
+<li><a href="https://phaser.io/examples/v2/arcade-physics/bounding-box">Code source 1</a>
+</li>
+<li><a href="https://phaser.io/examples/v2/text/center-text">Code source 2</a></li>
+<li><a href="https://phaser.io/examples/v2/text/display-text-word-by-word">Code source 3</a></li>
+<li><a href="https://www.joshmorony.com/how-to-create-a-parallax-background-in-phaser/">Code source 4</a></li>
+<li><a href="https://phaser.io/examples/v2/arcade-physics/bounding-box">Code source 5</a>
+</li>
+<li><a href="https://phaser.io/examples/v2/arcade-physics/angular-velocity">Code source 6</a></li>
+<li><a href="https://phaser.io/examples/v2/sprites/sprite-rotation">Code source 7</a></li>
+<li><a href="https://www.html5gamedevs.com/topic/23217-movetoxy-doesnt-stop-even-when-reached-destination/">Code source 8</a></li>
+<li><strong>High Concept:</strong>
+Help Biggie Cheese defeat Chicken Omega and claim your chicken dinner in this action packed shoot em up game.
+</li>
+
+<li><strong>Theme:</strong>
+Chicken
+</li>
+
+<li><strong>Mandated Variety:</strong></li>
+<li>Inputs: mouse click on the play button at the start.</li>
+<li>Keys: WASD or Arrow keys for movement</li>
+<li>Randomness: A little bit of randomness (random projectile sprites, random chance to get salmonella when hit)</li>
+<li>Play styles: Competitor, Joker, Achiever</li>
+<li>Genres: Shoot em up, shooter, bullethell</li>
+
+<li><strong>Prototype Goal:</strong>
+To test shoot em up enemy movements, projectile spawning and movement, player movement, and 'damage' mechanics.
+</li>
+
+<li><strong>Player Experience Goals:</strong>
+The goal is for the player to avoid all eggs while shooting the boss, trying not to get salmonella. This game is also a meme so laughing is okay too.
+</li>
+
+<li><strong>Gameplay:</strong>
+Player Actions:
+<li>Movement: WASD or Arrow keys</li>
+<li>Shoot (cutlery): Spacebar</li>
+<li>In the main menu use mouse to click the play button.</li>
+<li>Defeat the boss by throwing cutlery at Chicken Omega, avoid salmonella from raw eggs</li>
+</li>
+
+<li><strong>Strategies:</strong>
+Just hold spacebar and then chase the boss, he cant hurt you since you have to wait to die of salmonella.
+</li>
+
+<li><strong>Story/Setting/Premise:</strong>
+Looks like Chicken Omega wants to pick a fight. Lucky for you, Biggie Cheese is a carnivorous rat. Help Biggie defeat this rooster.
+</li>
+
+<li><strong>Target Audience:</strong>
+People who like memes and shmups and bullethells
+</li>
+
+<li><strong>Play Time:</strong>
+1-5 minutes
+</li>
+
+</ul>
+</div>
+</body>
+</html>
