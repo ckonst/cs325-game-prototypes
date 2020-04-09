@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<link rel="icon" href="data:;base64,=">
+	<meta charset="UTF-8" />
+	<title>Phaser Basic Project Template</title>
+	<script src="js/phaser.min.js"></script>
+	<!-- Boot.js must come first since it creates the BasicGame object
+	that stores all the states. -->
+	<script src="js/Boot.js"></script>
+	<script src="js/Preloader.js"></script>
+	<script src="js/MainMenu.js"></script>
+	<script src="js/Level1.js"></script>
+	<script src="js/Level2.js"></script>
+	<script src="js/Level1.js"></script>
+	<script src="C:/Users/Christian/CS325/JSlib/music-beat-detector/src/MusicBeatScheduler.js"></script>
+	<script src="C:/Users/Christian/CS325/JSlib/music-beat-detector/src/MusicBeatDetector.js"></script>
+	<script src="C:/Users/Christian/CS325/JSlib/music-beat-detector/src/MusicGraph.js"></script>
+	<script src="C:/Users/Christian/CS325/JSlib/create-music-stream/src/index.js"></script>
+	<script src="C:/Users/Christian/CS325/JSlib//create-music-stream/src/mp3.js"></script>
+	<script src="C:/Users/Christian/CS325/JSlib/create-music-stream/src/youtube.js"></script>
+	
+	<!-- main.js must come last since it references the other ones. -->
+	<script src="js/main.js"></script>
+
+<style>
+body
+{
+    color: #777;
+    font-family: "Avenir", Verdana, sans-serif;
+}
+#readme
+{
+    margin-top: 10px;
+}
+</style>
+
+</head>
+<body>
+<div id="game"></div>
+<div id="readme">
+<h2>The Halfway Child</h2>
+
+<ul>
+<li><strong>Originality:</strong>
+The game uses original design and movement mechanics, original sound and music, as well as an original story told through gameplay.
+</li>
+
+<li><strong>Technical Merit:</strong>
+The jumping system utilizes nonlinear vertical acceleration, platforming created with tilemaps, animations, parallax backgrounds, and state switching.
+</li>
+
+<li><strong>Prototype Postmortem:</strong>
+What did you learn from this prototype?
+I learned about the difficulties of generating collision tilemaps(I couldn't get it working how I wanted) and animations (also couldn't get working quite how I wanted)</li>
+<li> The easiest part was the basic mechanic (platforming) and loading in assets. The hardest parts were the animations and collision tilemapping.
+</li>
+
+<li><strong>Prototype Assets:</strong></li>
+<li><a href="https://forums.tigsource.com/index.php?topic=14166.0">Platforms and plant assets</a></li>
+<li><a href="https://www.reachdynamics.com/contact-us/videoblocks-blue-and-green-stars-on-dark-gradient-background_b-6yb4ppl_thumbnail-full01/">Menu BG</a></li>
+<li><a href="http://gaurav.munjal.us/Universal-LPC-Spritesheet-Character-Generator/">Player animations</a></li>
+<li>All other visual assets: original</li>
+<li>Sound and Music: original</li>
+</li>
+
+<li><strong><a href="https://phaser.io/examples/v2/games/starstruck">Prototype Closest Other Game: starstruck</a></strong></li>
+<li><a href="https://phaser.io/examples/v2/arcade-physics/bounding-box">code also borrowed from</a>
+</li>
+<li><a href="https://phaser.io/examples/v2/text/center-text">and</a></li>
+<li><a href="https://phaser.io/examples/v2/text/display-text-word-by-word">and</a></li>
+<li><a href="https://www.joshmorony.com/how-to-create-a-parallax-background-in-phaser/">and</a></li>
+<li><strong>High Concept:</strong>
+Help the lost girl find her way home in this platformer adventure.
+</li>
+
+<li><strong>Theme:</strong>
+Person who is lost.
+</li>
+
+<li><strong>Mandated Variety:</strong></li>
+<li>Inputs: mouse click on the play button at the start.</li>
+<li>Keys: a,d,left,right,space for movement and jumping</li>
+<li>Randomness: deterministic</li>
+<li>Play styles: Explorer, Storyteller, Achiever</li>
+<li>Genres: Platformer, Side-scroller</li>
+
+<li><strong>Prototype Goal:</strong>
+To test jumping, movement, shooting projectiles, hit detection, damage systems, enemy movement.
+</li>
+
+<li><strong>Player Experience Goals:</strong>
+Hopefully the player will be drawn into the world and its protagonist, and will be challenged by the platforming required to complete the game.
+</li>
+
+<li><strong>Gameplay:</strong>
+Player Actions:
+<li>Movement: WASD or Arrow keys</li>
+<li>Jump: Spacebar</li>
+<li>In the main menu use mouse to click the play button. Get to the end of the level to win the game.</li>
+</li>
+
+<li><strong>Strategies:</strong>
+If you are looking to beat the game quickly don't take the high path, it's much harder. If you want a challenge, go for it, take your time as well.
+</li>
+
+<li><strong>Story/Setting/Premise:</strong>
+The titular Halfway girl wakes up in an unknown forest. Faced with an almost impossible task, she tries to find her way home.
+</li>
+
+<li><strong>Target Audience:</strong>
+People with a strong sense of aesthetic and atmosphere, and those who like platformers.
+</li>
+
+<li><strong>Play Time:</strong>
+1-2 minutes.
+</li>
+
+</ul>
+</div>
+</body>
+</html>
