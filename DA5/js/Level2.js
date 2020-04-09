@@ -1,15 +1,15 @@
 "use strict";
 
 GameStates.makeLevel2 = function( game, shared ) {
-	var cs1 = ["When I woke up, I had no idea where I was, or how I got there.", "The straightforward pathway had been lost...",
-	"In this dark forest where I make my sojourn,", "I can only hope that I find a way out."]
-	var cs2 = ["Ahead of me lies a clearing, past that more wood.", "I grow tired and decide to rest for the night."]
+	var cs1 = ["I was awoken again in the middle of the winter, in the middle of the night.", "I once again fear for my life.",
+	"These skeletons aimed there bows at me...", "...and forced me to dance to their tune."];
+	var cs2 = ["", ""];
 	var line, c;
 	var charIndex = 0;
 	var lineIndex = 0;
 	var charDelay = 25;
 	var lineDelay = 75;
-	var text1, text2, text3, text4;
+	var text2, text3, text4;
 	var player;
 	var facing = 'left';
 	var jumpTimer = 0, movement_timer_x = 0, movement_timer_y = 0, text_timer = 0, cutscene1_timer = 0;
@@ -19,12 +19,11 @@ GameStates.makeLevel2 = function( game, shared ) {
 	var jumped;
 	var music, jump_sound;
 	var played1 = false, text1 = false; //flags for cutscenes
-	var textfade1, textfade2;
 	var map, layer;
 	var back, mid, front;
 	var completed = false;
 	
-	const gravity = 1500;
+	const gravity = 0;
 	
 	function render () {
 
@@ -40,8 +39,6 @@ GameStates.makeLevel2 = function( game, shared ) {
         //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
 		music.stop();	
         player.destroy();
-		text1.destroy();
-		text2.destroy();
 		text3.destroy();
 		text4.destroy();
         game.state.start('MainMenu');
@@ -105,61 +102,53 @@ GameStates.makeLevel2 = function( game, shared ) {
 			
 			game.physics.startSystem(Phaser.Physics.ARCADE);
 
-			game.stage.backgroundColor = '##39465c';
-			//back = game.add.sprite(0, 0, 'back');
-			//mid = game.add.sprite(0, 0, 'mid');
-			//front = game.add.sprite(0, 0, 'front');
+			game.stage.backgroundColor = '#39465c';
 			this.back = this.game.add.tileSprite(0, 
             0, 
-            4800, 
-            this.game.cache.getImage('back').height, 
-            'back'
-        );
+            1137, 
+            640, 
+            'back2'
+			);
 
-        this.mid = this.game.add.tileSprite(0, 
+			this.mid = this.game.add.tileSprite(0, 
             0, 
-            4800, 
-            this.game.cache.getImage('mid').height, 
-            'mid'
-        );
+            1137, 
+            640, 
+            'mid2'
+			);
 
-        this.front = this.game.add.tileSprite(0, 
+			this.front = this.game.add.tileSprite(0, 
             0, 
-            4800, 
-            this.game.cache.getImage('front').height, 
-            'front'
-        ); 
+            1137, 
+            640, 
+            'front2'
+			); 
+			this.back.scale.setTo(1.25, 1.25);
+			this.mid.scale.setTo(1.25, 1.25);
+			this.front.scale.setTo(1.25, 1.25);
+			
+			this.back.tint = 0x39465c;
+			this.mid.tint = 0x39465c;
+			this.front.tint = 0x39465c;
 	
-			map = game.add.tilemap('level1');
+			this.map = game.add.tilemap('level2');
 			//game.add.tilemap('level1c');
 			
 			//  Now add in the tileset
-			map.addTilesetImage('tileset', 'tiles');
+			this.map.addTilesetImage('snow', 'tiles2');
 			
-			map.setCollisionBetween(1,24);
+			this.map.setCollisionBetween(1,24);
 	
 			//  Create the layer
-			layer = map.createLayer('Tile Layer 1');
+			this.layer = this.map.createLayer('Tile Layer 1');
 			//  Resize the world
-			layer.resizeWorld();
+			this.layer.resizeWorld();
 			
 			//  Un-comment this on to see the collision tiles
 			// layer.debug = true;
 
 			var style = { font: "bold 32px Lucida Console", fill: "#C1EAF0", boundsAlignH: "center", boundsAlignV: "middle" };
 			var style2 = { font: "bold 16px Lucida Console", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle" };	
-			text1 = game.add.text((1137 / 2) - (32 * 12), 0, "\[a\] and \[d\] to move\n", style);
-			text1.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
-			text1.setTextBounds(0, 0, 800, 100);
-			text2 = game.add.text((1137 / 2) - (32 * 12), 0, "\[space\] to jump\n", style);
-			text2.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
-			text2.setTextBounds(0, 75, 800, 100);
-			text1.alpha = 0.0;
-			text2.alpha = 0.0;
-			game.add.tween(text1).to( { alpha: 1.0 }, 2000, "Linear", true);
-			game.add.tween(text2).to( { alpha: 1.0 }, 2000, "Linear", true);
-			textfade1 = game.add.tween(text1).to( { alpha: 0.0 }, 5000, "Linear", false);
-			textfade2 = game.add.tween(text2).to( { alpha: 0.0 }, 5000, "Linear", false);
 			text3 = game.add.text(32, 512, '', style2);
 			text4 = game.add.text(4096, 512, '', style2);
 			text3.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
@@ -168,7 +157,7 @@ GameStates.makeLevel2 = function( game, shared ) {
 
 			game.physics.arcade.gravity.y = gravity;
 			
-			player = game.add.sprite(0, 432, 'girl');
+			player = game.add.sprite(0, 336, 'girl');
 			
 			player.animations.add('awaken', [265, 264, 263, 262, 261, 260], 6, false);
 			player.animations.add('left', [117, 118, 119, 120, 121, 122, 123, 124, 125], 9, true);
@@ -182,8 +171,6 @@ GameStates.makeLevel2 = function( game, shared ) {
 			
 			player.body.immovable = false;
 			player.body.setSize(28, 46, 18, 14);
-			
-			player_health = 2000;
 			
 			game.camera.follow(player, 0.1, 0.1);
 			game.camera.deadzone = null;
@@ -228,15 +215,6 @@ GameStates.makeLevel2 = function( game, shared ) {
 					player.animations.play('awaken', 6, false);
 					return;
 				}
-			if(!text1)
-			{
-				if (time >= text_timer)
-					{
-						textfade1.start();
-						textfade2.start();
-						text1 = true;
-					}	
-			}
 			if(player.body.x >= 4288)
 			{
 				if(!completed)

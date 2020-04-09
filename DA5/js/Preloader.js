@@ -21,7 +21,7 @@ GameStates.makePreloader = function( game ) {
             game.load.image('titlePage', 'assets/img/Menu/MenuBG.png');
 			game.load.image('Title', 'assets/img/Menu/TheHalfwayChild.png');
 			
-            //Main Game assets
+            //Level 1 assets
 			game.load.audio('GameBGM', ['assets/audio/Level1/GameBGM2.ogg']);
 			game.load.audio('jump', ['assets/audio/jump2.ogg']);
 			game.load.spritesheet('girl', 'assets/img/SpriteSheet/girl.png', 64, 64);
@@ -32,6 +32,21 @@ GameStates.makePreloader = function( game ) {
 			game.load.image('mid', 'assets/img/Level1/forestmid.png');
 			game.load.image('back', 'assets/img/Level1/forestback.png');
 			
+			//Level 2 assets
+			game.load.image('front2', 'assets/img/Level2/Level2Front.png');
+			game.load.image('mid2', 'assets/img/Level2/Level2Mid.png');
+			game.load.image('back2', 'assets/img/Level2/Level2Back.png');
+			game.load.image('tiles2', 'assets/tilemaps/tiles/tileFront2.png');
+			game.load.tilemap('level2', 'assets/tilemaps/json/level2.json', null, Phaser.Tilemap.TILED_JSON);
+			game.load.audio('Rhythm1', ['assets/audio/Level2/Rhythm1.mp3']);
+			
+			//UI assets
+			game.load.image('arrows', 'assets/img/UI/arrows1.png');
+			game.load.image('arrowUp', 'assets/img/UI/arrows3_02.png');
+			game.load.image('arrowLeft', 'assets/img/UI/arrows3_04.png');
+			game.load.image('arrowDown', 'assets/img/UI/arrows3_05.png');
+			game.load.image('arrowRight', 'assets/img/UI/arrows3_06.png');
+			game.load.image('textBox', 'assets/img/UI/arrows3_02.png');
 		
 			
 			

@@ -47,16 +47,11 @@ GameStates.makeLevel1 = function( game, shared ) {
 		music.destroy();
 		layer.destroy();
 		map.destroy();
-		back.destroy();
-		mid.destroy();
-		front.destroy();
+		//back.destroy();
+		//mid.destroy();
+		//front.destroy();
 		
-		//load level 2 stuff
-			game.load.image('front2', 'assets/img/Level2/Level2Front.png');
-			game.load.image('mid2', 'assets/img/Level2/Level2Mid.png');
-			game.load.image('back2', 'assets/img/Level2/Level2Back.png');
-			game.load.image('tiles2', 'assets/tilemaps/tiles/tileFront2.png');
-			game.load.audio('Rhythm1', ['assets/audio/Level2/Rhythm1.mp3']);
+		
 			
         game.state.start('Level2');
 
@@ -252,7 +247,7 @@ GameStates.makeLevel1 = function( game, shared ) {
 				{
 					//game completed, quit game
 					nextLine(text4, cs2);
-					game.camera.fade(0x000000, 5500);
+					game.camera.fade(0x39465c, 5500);
 					game.time.events.add(6000, quitGame, this);
 					completed = true;
 				}
