@@ -1,9 +1,0 @@
-[submodule "music-beat-detector"]
-	path = music-beat-detector
-	url = C:/Users/Christian/JSlib/music-beat-detector
-[submodule "create-music-stream"]
-	path = create-music-stream
-	url = C:/Users/Christian/CS325/JSlib/create-music-stream
-[submodule "lib/music-beat-detector"]
-	path = lib/music-beat-detector
-	url = ./lib/create-music-stream
