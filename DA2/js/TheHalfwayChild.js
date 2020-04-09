@@ -212,8 +212,6 @@ GameStates.makeGame2 = function( game, shared ) {
 			player.animations.add('awaken', [265, 264, 263, 262, 261, 260], 6, false);
 			player.animations.add('left', [117, 118, 119, 120, 121, 122, 123, 124, 125], 9, true);
 			player.animations.add('right', [143, 144, 145, 145, 146, 147, 148, 149, 150], 9, true);
-			
-			
 
 			game.physics.enable(player, Phaser.Physics.ARCADE);
 
@@ -331,6 +329,7 @@ GameStates.makeGame2 = function( game, shared ) {
 				if (facing !== 'left')
 					facing = 'left';
 			}
+			
 			if (cursors.right.isDown || wasd.right.isDown)
 			{	
 				this.front.x -= 0.25;

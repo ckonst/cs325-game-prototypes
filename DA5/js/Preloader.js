@@ -16,21 +16,23 @@ GameStates.makePreloader = function( game ) {
 			background.scale.setTo(1.5, 1);
     
             // Title Screen Assets
-			game.load.atlas('playButton', 'assets/img/play_button2.png', 'assets/img/play_button.json');
-            game.load.audio('titleMusic', ['assets/audio/TitleScreen2.ogg']);
-            game.load.image('titlePage', 'assets/img/MenuBG.png');
-			game.load.image('Title', 'assets/img/TheHalfwayChild.png');
+			game.load.atlas('playButton', 'assets/img/Menu/play_button2.png', 'assets/img/play_button.json');
+            game.load.audio('titleMusic', ['assets/audio/Menu/TitleScreen2.ogg']);
+            game.load.image('titlePage', 'assets/img/Menu/MenuBG.png');
+			game.load.image('Title', 'assets/img/Menu/TheHalfwayChild.png');
 			
             //Main Game assets
-			game.load.audio('GameBGM', ['assets/audio/GameBGM2.ogg']);
+			game.load.audio('GameBGM', ['assets/audio/Level1/GameBGM2.ogg']);
 			game.load.audio('jump', ['assets/audio/jump2.ogg']);
-			game.load.spritesheet('girl', 'assets/img/girl.png', 64, 64);
+			game.load.spritesheet('girl', 'assets/img/SpriteSheet/girl.png', 64, 64);
 			game.load.tilemap('level1', 'assets/tilemaps/json/level1.json', null, Phaser.Tilemap.TILED_JSON);
 			game.load.image('tiles', 'assets/tilemaps/tiles/foresttiles1.png');
-			game.load.image('front', 'assets/img/forestfront.png');
-			game.load.image('mid', 'assets/img/forestmid.png');
-			game.load.image('back', 'assets/img/forestback.png');
 			
+			game.load.image('front', 'assets/img/Level1/forestfront.png');
+			game.load.image('mid', 'assets/img/Level1/forestmid.png');
+			game.load.image('back', 'assets/img/Level1/forestback.png');
+			
+		
 			
 			
         },

@@ -9,13 +9,12 @@ GameStates.makeLevel2 = function( game, shared ) {
 	var lineIndex = 0;
 	var charDelay = 25;
 	var lineDelay = 75;
-	var text1, text2, text3, text4
-	var player, player_health;
+	var text1, text2, text3, text4;
+	var player;
 	var facing = 'left';
 	var jumpTimer = 0, movement_timer_x = 0, movement_timer_y = 0, text_timer = 0, cutscene1_timer = 0;
 	var cursors;
 	var jumpButton;
-	var bg;
 	var wasd;
 	var jumped;
 	var music, jump_sound;
@@ -88,8 +87,6 @@ GameStates.makeLevel2 = function( game, shared ) {
 		console.log(charIndex);
 		console.log(line.length);
 		
-		
-		
 		//last character
 		if(charIndex === line.length - 1)
 		{
@@ -108,7 +105,7 @@ GameStates.makeLevel2 = function( game, shared ) {
 			
 			game.physics.startSystem(Phaser.Physics.ARCADE);
 
-			game.stage.backgroundColor = '#abb4cc';
+			game.stage.backgroundColor = '##39465c';
 			//back = game.add.sprite(0, 0, 'back');
 			//mid = game.add.sprite(0, 0, 'mid');
 			//front = game.add.sprite(0, 0, 'front');
@@ -132,10 +129,7 @@ GameStates.makeLevel2 = function( game, shared ) {
             this.game.cache.getImage('front').height, 
             'front'
         ); 
-
-
-
-				
+	
 			map = game.add.tilemap('level1');
 			//game.add.tilemap('level1c');
 			
@@ -148,9 +142,6 @@ GameStates.makeLevel2 = function( game, shared ) {
 			layer = map.createLayer('Tile Layer 1');
 			//  Resize the world
 			layer.resizeWorld();
-			
-			
-			
 			
 			//  Un-comment this on to see the collision tiles
 			// layer.debug = true;
@@ -183,8 +174,6 @@ GameStates.makeLevel2 = function( game, shared ) {
 			player.animations.add('left', [117, 118, 119, 120, 121, 122, 123, 124, 125], 9, true);
 			player.animations.add('right', [143, 144, 145, 145, 146, 147, 148, 149, 150], 9, true);
 			
-			
-
 			game.physics.enable(player, Phaser.Physics.ARCADE);
 			game.physics.arcade.TILE_BIAS = 32;
 
@@ -198,7 +187,6 @@ GameStates.makeLevel2 = function( game, shared ) {
 			
 			game.camera.follow(player, 0.1, 0.1);
 			game.camera.deadzone = null;
-			
 			
 			//controls
 			cursors = game.input.keyboard.createCursorKeys();

@@ -9,13 +9,12 @@ GameStates.makeLevel1 = function( game, shared ) {
 	var lineIndex = 0;
 	var charDelay = 25;
 	var lineDelay = 75;
-	var text1, text2, text3, text4
-	var player, player_health;
+	var text1, text2, text3, text4;
+	var player;
 	var facing = 'left';
 	var jumpTimer = 0, movement_timer_x = 0, movement_timer_y = 0, text_timer = 0, cutscene1_timer = 0;
 	var cursors;
 	var jumpButton;
-	var bg;
 	var wasd;
 	var jumped;
 	var music, jump_sound;
@@ -45,7 +44,21 @@ GameStates.makeLevel1 = function( game, shared ) {
 		text2.destroy();
 		text3.destroy();
 		text4.destroy();
-        game.state.start('MainMenu');
+		music.destroy();
+		layer.destroy();
+		map.destroy();
+		back.destroy();
+		mid.destroy();
+		front.destroy();
+		
+		//load level 2 stuff
+			game.load.image('front2', 'assets/img/Level2/Level2Front.png');
+			game.load.image('mid2', 'assets/img/Level2/Level2Mid.png');
+			game.load.image('back2', 'assets/img/Level2/Level2Back.png');
+			game.load.image('tiles2', 'assets/tilemaps/tiles/tileFront2.png');
+			game.load.audio('Rhythm1', ['assets/audio/Level2/Rhythm1.mp3']);
+			
+        game.state.start('Level2');
 
     }
 	
@@ -100,43 +113,6 @@ GameStates.makeLevel1 = function( game, shared ) {
 	return {
 		create: function() {
 			
-			const fs = require('fs')
-			const Speaker = require('speaker')
-			const createMusicStream = require('create-music-stream')
-
-			const {MusicBeatDetector, MusicBeatScheduler, MusicGraph} = require('.')
-
-			const musicSource = process.argv[2] //gets the first argument on cli
-
-			//MusicGraph generates a SVG graph that displays every detected peak
-			const musicGraph = new MusicGraph()
-
-			//MusicBeatScheduler syncs any detected peak with the listened audio. It's useful to control some bulbs or any other effect
-			const musicBeatScheduler = new MusicBeatScheduler(pos => {
-			  console.log(`peak at ${pos}ms`) //do your effect here
-			})
-
-			//MusicBeatDetector analyzes the music
-			const musicBeatDetector = new MusicBeatDetector({
-			  plotter: musicGraph.getPlotter(),
-			  scheduler: musicBeatScheduler.getScheduler(),
-			})
-
-			//get any raw pcm_16le stream
-			createMusicStream(musicSource)
-
-			  //pipe on analyzer
-			  .pipe(musicBeatDetector.getAnalyzer())
-			  .on('peak-detected', (pos, bpm) => console.log(`peak-detected at ${pos}ms, detected bpm ${bpm}`))
-			  .on('end', () => {
-				fs.writeFileSync('graph.svg', musicGraph.getSVG())
-				console.log('end')
-			  })
-
-			  //pipe on speaker
-			  .pipe(new Speaker())
-			  .on('open', () => musicBeatScheduler.start())
-			
 			game.physics.startSystem(Phaser.Physics.ARCADE);
 
 			game.stage.backgroundColor = '#abb4cc';
@@ -163,9 +139,6 @@ GameStates.makeLevel1 = function( game, shared ) {
             this.game.cache.getImage('front').height, 
             'front'
         ); 
-
-
-
 				
 			map = game.add.tilemap('level1');
 			//game.add.tilemap('level1c');
@@ -179,10 +152,7 @@ GameStates.makeLevel1 = function( game, shared ) {
 			layer = map.createLayer('Tile Layer 1');
 			//  Resize the world
 			layer.resizeWorld();
-			
-			
-			
-			
+				
 			//  Un-comment this on to see the collision tiles
 			// layer.debug = true;
 
@@ -214,8 +184,6 @@ GameStates.makeLevel1 = function( game, shared ) {
 			player.animations.add('left', [117, 118, 119, 120, 121, 122, 123, 124, 125], 9, true);
 			player.animations.add('right', [143, 144, 145, 145, 146, 147, 148, 149, 150], 9, true);
 			
-			
-
 			game.physics.enable(player, Phaser.Physics.ARCADE);
 			game.physics.arcade.TILE_BIAS = 32;
 
@@ -224,8 +192,6 @@ GameStates.makeLevel1 = function( game, shared ) {
 			
 			player.body.immovable = false;
 			player.body.setSize(28, 46, 18, 14);
-			
-			player_health = 2000;
 			
 			game.camera.follow(player, 0.1, 0.1);
 			game.camera.deadzone = null;
@@ -286,6 +252,7 @@ GameStates.makeLevel1 = function( game, shared ) {
 				{
 					//game completed, quit game
 					nextLine(text4, cs2);
+					game.camera.fade(0x000000, 5500);
 					game.time.events.add(6000, quitGame, this);
 					completed = true;
 				}
