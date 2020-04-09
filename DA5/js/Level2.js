@@ -1,6 +1,6 @@
 "use strict";
 
-GameStates.makeLevel1 = function( game, shared ) {
+GameStates.makeLevel2 = function( game, shared ) {
 	var cs1 = ["When I woke up, I had no idea where I was, or how I got there.", "The straightforward pathway had been lost...",
 	"In this dark forest where I make my sojourn,", "I can only hope that I find a way out."]
 	var cs2 = ["Ahead of me lies a clearing, past that more wood.", "I grow tired and decide to rest for the night."]
