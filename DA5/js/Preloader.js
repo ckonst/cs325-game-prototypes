@@ -16,7 +16,7 @@ GameStates.makePreloader = function( game ) {
 			background.scale.setTo(1.5, 1);
     
             // Title Screen Assets
-			game.load.atlas('playButton', 'assets/img/Menu/play_button2.png', 'assets/img/play_button.json');
+			game.load.atlas('playButton', 'assets/img/Menu/play_button2.png', 'assets/img/Menu/play_button.json');
             game.load.audio('titleMusic', ['assets/audio/Menu/TitleScreen2.ogg']);
             game.load.image('titlePage', 'assets/img/Menu/MenuBG.png');
 			game.load.image('Title', 'assets/img/Menu/TheHalfwayChild.png');
@@ -25,7 +25,7 @@ GameStates.makePreloader = function( game ) {
 			game.load.audio('GameBGM', ['assets/audio/Level1/GameBGM2.ogg']);
 			game.load.audio('jump', ['assets/audio/jump2.ogg']);
 			game.load.spritesheet('girl', 'assets/img/SpriteSheet/girl.png', 64, 64);
-			game.load.tilemap('level1', 'assets/tilemaps/json/level1.json', null, Phaser.Tilemap.TILED_JSON);
+			game.load.tilemap('level1', 'assets/tilemaps/json/level1DA5.json', null, Phaser.Tilemap.TILED_JSON);
 			game.load.image('tiles', 'assets/tilemaps/tiles/foresttiles1.png');
 			
 			game.load.image('front', 'assets/img/Level1/forestfront.png');
@@ -37,8 +37,10 @@ GameStates.makePreloader = function( game ) {
 			game.load.image('mid2', 'assets/img/Level2/Level2Mid.png');
 			game.load.image('back2', 'assets/img/Level2/Level2Back.png');
 			game.load.image('tiles2', 'assets/tilemaps/tiles/tileFront2.png');
-			game.load.tilemap('level2', 'assets/tilemaps/json/level2.json', null, Phaser.Tilemap.TILED_JSON);
+			game.load.tilemap('level2', 'assets/tilemaps/json/level2DA5.json', null, Phaser.Tilemap.TILED_JSON);
 			game.load.audio('Rhythm1', ['assets/audio/Level2/Rhythm1.mp3']);
+			game.load.image('skeleton', 'assets/img/SpriteSheet/skeleton.png', 64, 64);
+			game.load.text('data2', 'assets/rhythmMaps/Level2/rhythmMap.txt');
 			
 			//UI assets
 			game.load.image('arrows', 'assets/img/UI/arrows1.png');
@@ -46,7 +48,7 @@ GameStates.makePreloader = function( game ) {
 			game.load.image('arrowLeft', 'assets/img/UI/arrows3_04.png');
 			game.load.image('arrowDown', 'assets/img/UI/arrows3_05.png');
 			game.load.image('arrowRight', 'assets/img/UI/arrows3_06.png');
-			game.load.image('textBox', 'assets/img/UI/arrows3_02.png');
+			game.load.image('textBox', 'assets/img/UI/TextBox1.png');
 		
 			
 			
@@ -73,7 +75,7 @@ GameStates.makePreloader = function( game ) {
             if (game.cache.isSoundDecoded('titleMusic') && ready == false)
             {
                 ready = true;
-                game.state.start('MainMenu');
+                game.state.start('Level2');
             }
     
         }

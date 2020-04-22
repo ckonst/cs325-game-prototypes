@@ -1,7 +1,7 @@
 "use strict";
 
 GameStates.makeLevel1 = function( game, shared ) {
-	var cs1 = ["When I woke up, I had no idea where I was, or how I got there.", "The straightforward pathway had been lost...",
+	var cs1 = ["When I woke up, I had no idea where I was,", "or how I got there.", "The straightforward pathway had been lost...",
 	"In this dark forest where I make my sojourn,", "I can only hope that I find a way out."]
 	var cs2 = ["Ahead of me lies a clearing, past that more wood.", "I grow tired and decide to rest for the night."]
 	var line, c;
@@ -23,6 +23,7 @@ GameStates.makeLevel1 = function( game, shared ) {
 	var map, layer;
 	var back, mid, front;
 	var completed = false;
+	var textbox;
 	
 	const gravity = 1500;
 	
@@ -47,15 +48,21 @@ GameStates.makeLevel1 = function( game, shared ) {
 		music.destroy();
 		layer.destroy();
 		map.destroy();
-		//back.destroy();
-		//mid.destroy();
-		//front.destroy();
+		textbox.kill();
+		this.back.destroy();
+		this.mid.destroy();
+		this.front.destroy();
 		
 		
 			
         game.state.start('Level2');
 
     }
+	
+	function textDisappear(text) {
+		textbox.alpha = 0.0;
+		text.alpha = 0.0;
+	}
 	
 	function nextLine(txt, str) {
 
@@ -64,9 +71,10 @@ GameStates.makeLevel1 = function( game, shared ) {
 			//  We're finished
 			lineIndex = 0;
 			charIndex = 0;
+			game.time.events.add(5000, function(){textDisappear(txt);}, this);
 			return;
 		}
-
+		textbox.alpha = 1.0;
 		//  get next line
 		line = str[lineIndex];
 
@@ -109,7 +117,7 @@ GameStates.makeLevel1 = function( game, shared ) {
 		create: function() {
 			
 			game.physics.startSystem(Phaser.Physics.ARCADE);
-
+			
 			game.stage.backgroundColor = '#abb4cc';
 			//back = game.add.sprite(0, 0, 'back');
 			//mid = game.add.sprite(0, 0, 'mid');
@@ -144,13 +152,15 @@ GameStates.makeLevel1 = function( game, shared ) {
 			map.setCollisionBetween(1,24);
 	
 			//  Create the layer
-			layer = map.createLayer('Tile Layer 1');
+			layer = map.createLayer('Level1Layer');
 			//  Resize the world
 			layer.resizeWorld();
 				
 			//  Un-comment this on to see the collision tiles
 			// layer.debug = true;
-
+			
+			textbox = game.add.sprite(0, 60, 'textBox');
+			
 			var style = { font: "bold 32px Lucida Console", fill: "#C1EAF0", boundsAlignH: "center", boundsAlignV: "middle" };
 			var style2 = { font: "bold 16px Lucida Console", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle" };	
 			text1 = game.add.text((1137 / 2) - (32 * 12), 0, "\[a\] and \[d\] to move\n", style);
