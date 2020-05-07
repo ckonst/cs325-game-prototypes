@@ -2,37 +2,42 @@
 
 GameStates.makeLevel2 = function( game, shared ) {
 	var cs1 = ["I was awoken again in the middle of the winter,", "in the middle of the night.", "My body was flying through the forest",
-	"I flew for a while...", "...with no end in sight."];
-	var cs2 = ["", ""];
+	"I flew for a while...", "...with no exit in sight."];
+	var cs2 = ["I feel my consciousness fading once more...", "whether I am asleep or awake, I am still unsure."];
 	var line, c;
 	var charIndex = 0;
 	var lineIndex = 0;
 	var charDelay = 25;
 	var lineDelay = 75;
-	var text2, text3, text4;
+	var text1, text2;
 	var textbox;
 	var player;
-	var facing = 'left';
-	var jumpTimer = 0, movement_timer_x = 0, movement_timer_y = 0, text_timer = 0, cutscene1_timer = 0;
+	var facing = 'right';
+	var text_timer = 0, cutscene1_timer = 0;
 	var cursors;
 	var jumpButton;
 	var wasd;
 	var jumped;
-	var music, jump_sound;
+	var music, hit_sound;
 	var played1 = false, text1 = false; //flags for cutscenes
 	var map, layer;
 	var back, mid, front;
 	var completed = false;
 	var style = { font: "bold 32px Lucida Console", fill: "#C1EAF0", boundsAlignH: "center", boundsAlignV: "middle" };
 	var style2 = { font: "bold 16px Lucida Console", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle" };	
+	var counter;
+	var time; //keeps track of in game time
+	var finished = false;
 	
-	//rhythm stuff
+	//rhythm UI stuff
 	var arrows = [];
 	var arrowData = [];
-	var arrowUI;
+	var arrowUI, upLight, downLight, leftLight, rightLight;
 	var arrow;
-	var skeleton;
-	var randy;
+	var dir;
+	var prev = 0, next = 0;
+	
+	const tolerance = 300;
 	const directions = ['arrowUp','arrowDown','arrowLeft','arrowRight'];
 	
 	const gravity = 0;
@@ -47,24 +52,100 @@ GameStates.makeLevel2 = function( game, shared ) {
 		
 	function Complete() {
 		completed = true;
+		nextLine(text2, cs2);
 	}
 		
-	function spawnArrow()
+	function spawnArrow(i)
 	{
-		randy = Math.floor(Math.random() * 4);
-		if(randy === 0) 
-			arrow = game.add.sprite(game.width, 0, directions[randy]);
-		else
-			arrow = game.add.sprite(game.width, 245/4, directions[randy]);
+		dir = Math.floor(Math.random() * 4);
+		if(i > 0 && i > arrowData.length - 1)
+		{
+			//if the data is very close together, calculate the opposite direction and use that instead of a random direction.
+			if((arrowData[i] - arrowData[i - 1]) <= tolerance || (arrowData[i + 1] - arrowData[i]) <= tolerance)
+			{
+				switch(dir){
+					case 0:	
+						//up
+						dir = 3;
+						break;
+					case 1:	
+						//down
+						dir = 2;
+						break;
+					case 2:	
+						//left
+						dir = 0;
+						break;
+					case 3:	
+						//right
+						dir = 2;
+						break;
+				}
+			}
+		}
+		//depending on which direction the arrow is, adjust the y spawn position.
+		switch(dir){
+			case 0:	
+				//up
+				arrow = game.add.sprite(game.width, 0, directions[dir]);
+				arrow.tint = 0xabb4cc;
+				arrow.data = 0;
+				prev = 0;
+				break;
+			case 1:	
+				//down
+				arrow = game.add.sprite(game.width, 245/4, directions[dir]);
+				arrow.tint = 0xabb4cc;
+				arrow.data = 1;
+				prev = 1;
+				break;
+			case 2:	
+				//left
+				arrow = game.add.sprite(game.width, (245/4) * 2, directions[dir]);
+				arrow.tint = 0xabb4cc;
+				arrow.data = 2;
+				prev = 2;
+				break;
+			case 3:	
+				//right
+				arrow = game.add.sprite(game.width, (245/4) * 3, directions[dir]);
+				arrow.tint = 0xabb4cc;
+				arrow.data = 3;
+				prev = 3;
+				break;
+			}
+		
 		game.physics.enable(arrow, Phaser.Physics.ARCADE);
 		arrow.scale.setTo(.25, .25);
 		arrow.body.velocity.x = -500;
+		arrow.alpha = 1.0;
 		arrows.push(arrow);
-		console.log("hi");
 	}
 	function destroyArrow()
 	{
+		arrows[0].destroy();
 		arrows.shift();
+	}
+	function detectHit(direction){
+		if(arrows[0])
+		{
+			if(direction === arrows[0].data)
+			{
+				if (arrows[0].body.x < 229 && arrows[0].body.x > 100 )
+				{
+					//hit
+					destroyArrow();
+					player.animations.stop('idle', true);
+					player.animations.play('rightFly', 7, false, false);
+					hit_sound.play();
+				}
+				else
+				{
+					//miss
+			
+				}
+			}
+		}
 	}
 	
 	function quitGame() {
@@ -73,8 +154,8 @@ GameStates.makeLevel2 = function( game, shared ) {
         //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
 		music.stop();	
         player.destroy();
-		text3.destroy();
-		text4.destroy();
+		text1.destroy();
+		text2.destroy();
         game.state.start('MainMenu');
 
     }
@@ -82,9 +163,10 @@ GameStates.makeLevel2 = function( game, shared ) {
 	function textDisappear(text) {
 		textbox.alpha = 0.0;
 		text.alpha = 0.0;
+		text.kill();
 	}
 	
-	function nextLine(txt, str) {
+function nextLine(txt, str) {
 
 		if (lineIndex === str.length)
 		{
@@ -94,9 +176,7 @@ GameStates.makeLevel2 = function( game, shared ) {
 			game.time.events.add(5000, function(){textDisappear(txt);}, this);
 			return;
 		}
-		
 		textbox.alpha = 1.0;
-		
 		//  get next line
 		line = str[lineIndex];
 
@@ -121,7 +201,7 @@ GameStates.makeLevel2 = function( game, shared ) {
 		{
 			txt.text = txt.text.concat(c);
 		}
-		
+
 		//last character
 		if(charIndex === line.length - 1)
 		{
@@ -168,48 +248,37 @@ GameStates.makeLevel2 = function( game, shared ) {
 			this.back.tint = 0x39465c;
 			this.mid.tint = 0x39465c;
 			this.front.tint = 0x39465c;
-	
-			//this.map = game.add.tilemap('level2');
-			//game.add.tilemap('level1c');
-			
-			//  Now add in the tileset
-			//this.map.addTilesetImage('WinterFront', 'tiles2');
-			
-			//this.map.setCollisionBetween(1,24);
-	
-			//  Create the layer
-			//this.layer = this.map.createLayer('Level2Layer');
-			//  Resize the world
-			//this.layer.resizeWorld();
-			
-			//  Un-comment this on to see the collision tiles
-			//this.layer.debug = true;
-			
 			
 			textbox = game.add.sprite(0, 60, 'textBox');
+			textbox.tint = 0xabb4cc;
 			
-			text3 = game.add.text(32, 512, '', style2);
-			text4 = game.add.text(4096, 512, '', style2);
-			text3.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
-			text4.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
-			nextLine(text3, cs1);
+			text1 = game.add.text(32, 512, '', style2);
+			text2 = game.add.text(32, 512, '', style2);
+			text1.tint = 0x9dcfd4;
+			text2.tint = 0x9dcfd4;
+			text1.setShadow(3, 3, 'rgba(0,0,0,0.85)', 2);
+			text2.setShadow(3, 3, 'rgba(0,0,0,0.85)', 2);
+			nextLine(text1, cs1);
 
 			game.physics.arcade.gravity.y = gravity;
 			
-			player = game.add.sprite(game.width/2, game.height - (32*7), 'girl');
+			player = game.add.sprite(game.width/2, game.height - (32*10), 'girl');
 			
 			player.animations.add('awaken', [265, 264, 263, 262, 261, 260], 6, false);
 			player.animations.add('left', [117, 118, 119, 120, 121, 122, 123, 124, 125], 9, true);
 			player.animations.add('right', [143, 144, 145, 145, 146, 147, 148, 149, 150], 9, true);
+			player.animations.add('rightFly', [39, 40, 41, 42, 43, 44, 45], 7, true);
+			player.animations.add('idle', [44], 1,  true);
 			
 			game.physics.enable(player, Phaser.Physics.ARCADE);
 			game.physics.arcade.TILE_BIAS = 32;
-
-			//player.body.bounce.y = 0.2;
-			//player.body.collideWorldBounds = true;
 			
 			player.body.immovable = false;
 			player.body.setSize(28, 46, 18, 14);
+			player.angle = 70;
+			player.animations.play('rightFly', 7, true);
+			
+			player.tint = 0xabb4cc;
 			
 			game.camera.follow(player, 0.1, 0.1);
 			game.camera.deadzone = null;
@@ -222,11 +291,41 @@ GameStates.makeLevel2 = function( game, shared ) {
 				left: game.input.keyboard.addKey(Phaser.Keyboard.A),
 				right: game.input.keyboard.addKey(Phaser.Keyboard.D),
 			};
-			jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+			cursors.up.onDown.add(function(){detectHit(0)});
+			cursors.down.onDown.add(function(){detectHit(1)});
+			cursors.left.onDown.add(function(){detectHit(2)});
+			cursors.right.onDown.add(function(){detectHit(3)});
+			wasd.up.onDown.add(function(){detectHit(0)});
+			wasd.down.onDown.add(function(){detectHit(1)});
+			wasd.left.onDown.add(function(){detectHit(2)});
+			wasd.right.onDown.add(function(){detectHit(3)});
 			
 			//rhythm stuff
 			arrowUI = game.add.sprite(100, 0.5, 'arrows');
+			upLight = game.add.sprite(100, 0.5, 'upL');
+			downLight = game.add.sprite(100, 0.5, 'downL');
+			leftLight = game.add.sprite(100, 0.5, 'leftL');
+			rightLight = game.add.sprite(100, 0.5, 'rightL');
+			
+			arrowUI.tint = 0xabb4cc;
+			
+			upLight.tint = 0xabb4cc;
+			downLight.tint = 0xabb4cc;
+			leftLight.tint = 0xabb4cc;
+			rightLight.tint = 0xabb4cc;
+			
 			arrowUI.scale.setTo(.25, .25);
+			
+			upLight.scale.setTo(.25, .25);
+			downLight.scale.setTo(.25, .25);
+			leftLight.scale.setTo(.25, .25);
+			rightLight.scale.setTo(.25, .25);
+			
+			upLight.alpha = 0.0;
+			downLight.alpha = 0.0;
+			leftLight.alpha = 0.0;
+			rightLight.alpha = 0.0;
+			
 			arrowUI.tint = 0xffffff;
 			arrows = new Array();
 			arrowData = game.cache.getText('data2').split('\n');
@@ -235,18 +334,20 @@ GameStates.makeLevel2 = function( game, shared ) {
 			{
 				if(arrowData[i]*1000 === 0)
 					continue;
-				game.time.events.add((arrowData[i]*1000 - ((game.width -100)/500) *1), function(){spawnArrow();}, this);
-				//game.time.events.add((arrowData[i]*1000 + ((game.width -100)/500) *1), function(){destroyArrow();}, this);
+				arrowData[i] = arrowData[i]*1000;
+				
+				game.time.events.add(arrowData[i] - (((game.width -168)/500) * 1000) + 100, function(){spawnArrow(i);}, this);
 			}
 			
 			//audio
 			music = game.add.audio('Rhythm1');
+			hit_sound = game.add.audio('blip');
 			music.volume = 1.0;
-			jump_sound = game.add.audio('jump');
+			hit_sound.volume = .5;
 			music.onStop.addOnce(Complete, this);
 			music.play();	
 			
-			var time = game.time.now;
+			time = game.time.now;
 			text_timer = time + 3000;
 			cutscene1_timer = time + 1000;
 			game.camera.flash(0xffffff, 500);
@@ -255,40 +356,85 @@ GameStates.makeLevel2 = function( game, shared ) {
 		update: function() {
 			//render();
 			var time = game.time.now;
-			var collided;
-			//collided = game.physics.arcade.collide(player, layer);
+			
 			this.front.tilePosition.x -= 20;
 			this.mid.tilePosition.x -= 8;
 			this.back.tilePosition.x -= 1;
 			
-			for(var i = 0; i < arrows.length; i++)
-			{
-				
-			}
-			
 			if(!played1)
 				{	
-					
 					if(time >= cutscene1_timer)
 					{
 						played1 = true;
-						player.animations.play('right', 18 , true);
+						player.animations.play('rightFly', 7, false, false);
 						player.animations.stop();
-						return;
 					}
-					player.animations.play('awaken', 6, false);
-					return;
 				}
 				
-				if(completed)
+			counter++;
+			if(player !== null && player.body !== null)
+			{
+				player.body.velocity.y = (Math.sin(.005 * time) * 50);
+				player.scale.setTo((Math.sin(.0005 * time) * 0.75) + 1.5 , (Math.sin(.0005 * time) * 0.75) + 1.5);
+			}	
+					
+			if(!player.animations.getAnimation('rightFly').isPlaying)
+			{
+				player.animations.play('idle');
+			}
+			
+			// if the arrow was missed then destroy it.
+			if(arrows[0])
+			{
+				if(arrows[0].body)
 				{
-					//game completed, quit game
-					nextLine(text4, cs2);
-					game.time.events.add(1000, quitGame, this);
+						if(arrows[0].body.x <= 0)
+					{
+						destroyArrow();
+					}
 				}
+			}
 			
+			// control visual feedback
+			if(cursors.up.isDown || wasd.up.isDown)
+			{
+				upLight.alpha = 1.0;
+			}
+			else {
+				upLight.alpha = 0.0;
+			}
+			if(cursors.down.isDown || wasd.down.isDown)
+			{
+				downLight.alpha = 1.0;
+			}
+			else {
+				downLight.alpha = 0.0;
+			}
+			if(cursors.left.isDown || wasd.left.isDown)
+			{
+				leftLight.alpha = 1.0;
+			}
+			else {
+				leftLight.alpha = 0.0;
+			}
+			if(cursors.right.isDown || wasd.right.isDown)
+			{
+				rightLight.alpha = 1.0;
+			}
+			else {
+				rightLight.alpha = 0.0;
+			}
 			
+			if(finished)
+				return;
 			
+			if(completed)
+				{
+					finished = true;
+					//game completed, quit game
+					game.camera.fade(0x39465c, 7000);
+					game.time.events.add(8000, quitGame, this);
+				}
 		}	
 	};
 }

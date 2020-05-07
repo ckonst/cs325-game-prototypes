@@ -4,6 +4,8 @@ GameStates.makeMainMenu = function( game, shared ) {
 
 	var music = null;
 	var playButton = null;
+	var title;
+	var bg;
     function startGame(pointer) {
         //	Ok, the Play Button has been clicked or touched, so let's stop the music (otherwise it'll carry on playing)
         music.stop();
@@ -36,10 +38,14 @@ GameStates.makeMainMenu = function( game, shared ) {
             music = game.add.audio('titleMusic');
             music.loopFull();
     
-            game.add.sprite(0, 0, 'titlePage');
-			game.add.sprite((1137 / 2 ) - 400, 0, 'Title');
+            bg = game.add.sprite(0, 0, 'titlePage');
+			bg.tint = 0xffffff;
+			title = game.add.sprite((1137 / 2 ) - 400, 0, 'Title');
+			title.tint = 0x2e7794;
     
             playButton = game.add.button((1137 / 2 ) - 96, 400, 'playButton', startGame, null, 'over', 'out', 'down');
+			
+			playButton.tint = 0x2e7794;
 			
 			//maintain aspect ratio
 			game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;

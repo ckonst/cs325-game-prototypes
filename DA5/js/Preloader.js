@@ -37,13 +37,19 @@ GameStates.makePreloader = function( game ) {
 			game.load.image('mid2', 'assets/img/Level2/Level2Mid.png');
 			game.load.image('back2', 'assets/img/Level2/Level2Back.png');
 			game.load.image('tiles2', 'assets/tilemaps/tiles/tileFront2.png');
+			
+			game.load.image('upL', 'assets/img/UI/upLight.png');
+			game.load.image('downL', 'assets/img/UI/downLight.png');
+			game.load.image('leftL', 'assets/img/UI/leftLight.png');
+			game.load.image('rightL', 'assets/img/UI/rightLight.png');
+			
 			game.load.tilemap('level2', 'assets/tilemaps/json/level2DA5.json', null, Phaser.Tilemap.TILED_JSON);
 			game.load.audio('Rhythm1', ['assets/audio/Level2/Rhythm1.mp3']);
-			game.load.image('skeleton', 'assets/img/SpriteSheet/skeleton.png', 64, 64);
-			game.load.text('data2', 'assets/rhythmMaps/Level2/rhythmMap.txt');
+			game.load.audio('blip', ['assets/audio/Level2/blip.mp3']);
+			game.load.text('data2', 'assets/rhythmMaps/Level2/rhythmMap1.txt');
 			
 			//UI assets
-			game.load.image('arrows', 'assets/img/UI/arrows1.png');
+			game.load.image('arrows', 'assets/img/UI/arrowsVert1.png');
 			game.load.image('arrowUp', 'assets/img/UI/arrows3_02.png');
 			game.load.image('arrowLeft', 'assets/img/UI/arrows3_04.png');
 			game.load.image('arrowDown', 'assets/img/UI/arrows3_05.png');
@@ -75,7 +81,7 @@ GameStates.makePreloader = function( game ) {
             if (game.cache.isSoundDecoded('titleMusic') && ready == false)
             {
                 ready = true;
-                game.state.start('Level2');
+                game.state.start('MainMenu');
             }
     
         }

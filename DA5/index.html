@@ -12,7 +12,6 @@
 	<script src="js/MainMenu.js"></script>
 	<script src="js/Level1.js"></script>
 	<script src="js/Level2.js"></script>
-	<script src="js/Level1.js"></script>
 	
 	<!-- main.js must come last since it references the other ones. -->
 	<script src="js/main.js"></script>
@@ -37,17 +36,18 @@ body
 
 <ul>
 <li><strong>Originality:</strong>
-The game uses original design and movement mechanics, original sound and music, as well as an original story told through gameplay.
+The game uses original design and rhyhthm mechanics, original sound and music, as well as an original story told through gameplay.
 </li>
 
 <li><strong>Technical Merit:</strong>
-The jumping system utilizes nonlinear vertical acceleration, platforming created with tilemaps, animations, parallax backgrounds, and state switching.
+The game includes audio and visual feedback for the controls, timed event signaling based off of rhythm label data (exported from audacity) to sync gameplay with the music, platforming created with tilemaps, animations, parallax backgrounds, rudimentary UI, and state switching.
 </li>
+<li>The arrows are spawned in off screen and moved towards the left at a fixed velocity to line up with the static arrows in time with the music.</li>
 
 <li><strong>Prototype Postmortem:</strong>
 What did you learn from this prototype?
-I learned about the difficulties of generating collision tilemaps(I couldn't get it working how I wanted) and animations (also couldn't get working quite how I wanted)</li>
-<li> The easiest part was the basic mechanic (platforming) and loading in assets. The hardest parts were the animations and collision tilemapping.
+I learned about the difficulties of getting rhythm detection to work, and so I had to do it manually, but I was able to have audio/visual feedback as opposed to just playing with numbers and guessing for each beat.</li>
+<li> The easiest part was the stuff that I had already done such as animations, parallax, etc. the hard part was finding a solution to the rhythm mapping.
 </li>
 
 <li><strong>Prototype Assets:</strong></li>
@@ -58,44 +58,44 @@ I learned about the difficulties of generating collision tilemaps(I couldn't get
 <li>Sound and Music: original</li>
 </li>
 
-<li><strong><a href="https://phaser.io/examples/v2/games/starstruck">Prototype Closest Other Game: starstruck</a></strong></li>
+<li><strong>Prototype Closest Other Game: Ori and the Blind Forest, DDR</strong></li>
 <li><a href="https://phaser.io/examples/v2/arcade-physics/bounding-box">code also borrowed from</a>
 </li>
 <li><a href="https://phaser.io/examples/v2/text/center-text">and</a></li>
 <li><a href="https://phaser.io/examples/v2/text/display-text-word-by-word">and</a></li>
 <li><a href="https://www.joshmorony.com/how-to-create-a-parallax-background-in-phaser/">and</a></li>
 <li><strong>High Concept:</strong>
-Help the lost girl find her way home in this platformer adventure.
+Help the lost girl find her way home in this platformer/rhythm game.
 </li>
 
 <li><strong>Theme:</strong>
 Person who is lost.
 </li>
 
-<li><strong>Mandated Variety:</strong></li>
-<li>Inputs: mouse click on the play button at the start.</li>
-<li>Keys: a,d,left,right,space for movement and jumping</li>
-<li>Randomness: deterministic</li>
-<li>Play styles: Explorer, Storyteller, Achiever</li>
-<li>Genres: Platformer, Side-scroller</li>
-
 <li><strong>Prototype Goal:</strong>
-To test jumping, movement, shooting projectiles, hit detection, damage systems, enemy movement.
+To test movement, animations, rhythm game mechanics, visual/audio feedback, etc.
 </li>
 
 <li><strong>Player Experience Goals:</strong>
-Hopefully the player will be drawn into the world and its protagonist, and will be challenged by the platforming required to complete the game.
+Hopefully the player will be drawn into the world and its protagonist, and enjoy the platforming and rhythmic challenges it offers.
 </li>
 
 <li><strong>Gameplay:</strong>
-Player Actions:
+<li>Player Actions:</li>
+
+<li>Platforming Level:</li>
 <li>Movement: WASD or Arrow keys</li>
 <li>Jump: Spacebar</li>
 <li>In the main menu use mouse to click the play button. Get to the end of the level to win the game.</li>
+
+<li>Rhythm Level:</li>
+<li>Tap: WASD or Arrow keys</li>
+<li>Tap the arrows that appear at the top of the screen to the rhythm of the music.</li>
 </li>
 
 <li><strong>Strategies:</strong>
 If you are looking to beat the game quickly don't take the high path, it's much harder. If you want a challenge, go for it, take your time as well.
+For the rhythm section, you have to just get good at playing rhythm games.
 </li>
 
 <li><strong>Story/Setting/Premise:</strong>
@@ -103,11 +103,11 @@ The titular Halfway girl wakes up in an unknown forest. Faced with an almost imp
 </li>
 
 <li><strong>Target Audience:</strong>
-People with a strong sense of aesthetic and atmosphere, and those who like platformers.
+People with a strong sense of aesthetic and atmosphere, and those who like platformers or rhythm games.
 </li>
 
 <li><strong>Play Time:</strong>
-1-2 minutes.
+6+ minutes.
 </li>
 
 </ul>

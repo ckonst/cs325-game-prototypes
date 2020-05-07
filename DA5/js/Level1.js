@@ -62,6 +62,7 @@ GameStates.makeLevel1 = function( game, shared ) {
 	function textDisappear(text) {
 		textbox.alpha = 0.0;
 		text.alpha = 0.0;
+		textbox.x = 4016;
 	}
 	
 	function nextLine(txt, str) {
@@ -160,14 +161,17 @@ GameStates.makeLevel1 = function( game, shared ) {
 			// layer.debug = true;
 			
 			textbox = game.add.sprite(0, 60, 'textBox');
+			textbox.tint = 0xabb4cc;
 			
 			var style = { font: "bold 32px Lucida Console", fill: "#C1EAF0", boundsAlignH: "center", boundsAlignV: "middle" };
 			var style2 = { font: "bold 16px Lucida Console", fill: "#ffffff", boundsAlignH: "center", boundsAlignV: "middle" };	
 			text1 = game.add.text((1137 / 2) - (32 * 12), 0, "\[a\] and \[d\] to move\n", style);
-			text1.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
+			text1.tint = 0x9dcfd4;
+			text1.setShadow(3, 3, 'rgba(0,0,0,0.85)', 2);
 			text1.setTextBounds(0, 0, 800, 100);
 			text2 = game.add.text((1137 / 2) - (32 * 12), 0, "\[space\] to jump\n", style);
-			text2.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
+			text2.tint = 0x9dcfd4;
+			text2.setShadow(3, 3, 'rgba(0,0,0,0.85)', 2);
 			text2.setTextBounds(0, 75, 800, 100);
 			text1.alpha = 0.0;
 			text2.alpha = 0.0;
@@ -176,9 +180,16 @@ GameStates.makeLevel1 = function( game, shared ) {
 			textfade1 = game.add.tween(text1).to( { alpha: 0.0 }, 5000, "Linear", false);
 			textfade2 = game.add.tween(text2).to( { alpha: 0.0 }, 5000, "Linear", false);
 			text3 = game.add.text(32, 512, '', style2);
+			text3.tint = 0x9dcfd4;
 			text4 = game.add.text(4096, 512, '', style2);
-			text3.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
-			text4.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
+			text4.tint = 0x9dcfd4;
+			text3.setShadow(3, 3, 'rgba(0,0,0,0.85)', 2);
+			text4.setShadow(3, 3, 'rgba(0,0,0,0.85)', 2);
+			
+			
+			
+			
+		
 			nextLine(text3, cs1);
 
 			game.physics.arcade.gravity.y = gravity;
@@ -197,6 +208,8 @@ GameStates.makeLevel1 = function( game, shared ) {
 			
 			player.body.immovable = false;
 			player.body.setSize(28, 46, 18, 14);
+			
+			player.tint = 0xabb4cc;
 			
 			game.camera.follow(player, 0.1, 0.1);
 			game.camera.deadzone = null;
