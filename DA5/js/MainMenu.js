@@ -1,19 +1,20 @@
 "use strict";
 
-GameStates.makeMainMenu = function( game, shared ) {
+GameStates.makeMainMenu = function (game, shared) {
 
 	var music = null;
 	var playButton = null;
 	var title;
 	var bg;
-    function startGame(pointer) {
-        //	Ok, the Play Button has been clicked or touched, so let's stop the music (otherwise it'll carry on playing)
-        music.stop();
-	
-        //	And start the actual game
-        game.state.start('Level1');
-    }
-    //go to fullscreen mode
+
+	function startGame(pointer) {
+		//	Ok, the Play Button has been clicked or touched, so let's stop the music (otherwise it'll carry on playing)
+		music.stop();
+
+		//	And start the actual game
+		game.state.start('Level1');
+	}
+	// go to fullscreen mode
 	function gofull() {
 		/*	if (game.scale.isFullScreen)
 			{
@@ -26,41 +27,51 @@ GameStates.makeMainMenu = function( game, shared ) {
 		*/
 		game.scale.startFullScreen(false);
 	}
-	
-    return {
-    
-        create: function () {
-    
-            //	We've already preloaded our assets, so let's kick right into the Main Menu itself.
-            //	Here all we're doing is playing some music and adding a picture and button
-            //	Naturally I expect you to do something significantly better :)
-    
-            music = game.add.audio('titleMusic');
-            music.loopFull();
-    
-            bg = game.add.sprite(0, 0, 'titlePage');
+
+	return {
+
+		create: function () {
+
+			game.input.onDown.addOnce(function () {
+				if (game.sound.usingWebAudio && game.sound.context.state !== 'running') {
+					game.sound.context.resume();
+					game.sound.mute = shared.isMuted;
+				}
+			});
+
+			music = game.add.audio('TitleMusic');
+			music.loopFull();
+
+			bg = game.add.sprite(0, 0, 'TitlePage');
 			bg.tint = 0xffffff;
-			title = game.add.sprite((1137 / 2 ) - 400, 0, 'Title');
+			title = game.add.sprite((1137 / 2) - 400, 0, 'Title');
 			title.tint = 0x2e7794;
-    
-            playButton = game.add.button((1137 / 2 ) - 96, 400, 'playButton', startGame, null, 'over', 'out', 'down');
-			
+
+			playButton = game.add.button((1137 / 2) - 96, 400, 'PlayButton', startGame, null, 'over', 'out', 'down');
+
 			playButton.tint = 0x2e7794;
-			
-			//maintain aspect ratio
+
+			// maintain aspect ratio
 			game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
-			
-			
-        },
-    
-        update: function () {
-			//console.log("in main\n");
-            //	Do some nice funky main menu effect here
-			if(!music.isPlaying) {
-				music.play();
+
+			var muteButton = game.add.button(game.world.width - 50, 50, 'MutedIcon', toggleMute, this);
+			muteButton.scale.set(0.5, 0.5);
+			muteButton.anchor.set(0.5);
+			function toggleMute() {
+				shared.isMuted = !shared.isMuted; // Toggle state
+				game.sound.mute = shared.isMuted; // Apply mute state to game sound
+				muteButton.loadTexture(shared.isMuted ? 'MutedIcon' : 'UnmutedIcon');
+				if (!music.isPlaying && !shared.isMuted) {
+					music.play();
+				}
 			}
+			console.log(muteButton.x + "\n");
+		},
+
+		update: function () {
+			//console.log("in main\n");
 			game.input.onDown.add(gofull, this);
-		}
-        
-    };
+		},
+
+	};
 };

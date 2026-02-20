@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<link rel="icon" href="data:;base64,=">
+		<meta charset="UTF-8" />
+		<title>Phaser Basic Project Template</title>
+		<script src="js/phaser.min.js"></script>
+		<!-- Boot.js must come first since it creates the BasicGame object
+		that stores all the states. -->
+		<script src="js/Boot.js"></script>
+		<script src="js/Preloader.js"></script>
+		<script src="js/MainMenu.js"></script>
+		<script src="js/COC.js"></script>
+		<script src="js/EndScreen.js"></script>
+
+		<!-- main.js must come last since it references the other ones. -->
+		<script src="js/main.js"></script>
+
+		<style>
+			body
+			{
+				<!--background-color: #E7EFF8;-->
+				background-color: #FFFFFF;
+				color: #302336;
+				font-family: "Avenir", Verdana, sans-serif;
+			}
+			#link_bar a { padding:15px; font-weight:bold; font-family: "Avenir", Verdana, sans-serif; }
+			#link_bar a:link { color:#98A1BA; }
+			#link_bar a:visited { color:#8979A3; }
+			#link_bar a:hover { color:#BEC5E6; }
+			#link_bar a:active { color:#9699D6; }
+		</style>
+	</head>
+
+	<body>
+		<div id="game"></div>
+		<div id="link_bar">
+			<a href="../../index.html">Home</a>
+			<h2>Chicken Omega Challenge</h2>
+
+			<ul>
+			<li><strong>Originality:</strong>
+				The game uses original design and enemy phase mechanics as well as original sound and music.
+			</li>
+
+			<li><strong>Technical Merit:</strong></li>
+			<li>There are enemy 3 phases that change enmy projectile size and speed. The enemy boss uses sinusoidal movement patterns,</li>
+			<li>there is audio feedback for phase changes as well as shooting and taking damage for both the player and enemy. There is also randomly selected player projectile sprites and state switching.
+			</li>
+
+			<li><strong>Prototype Postmortem:</strong>
+				I learned how planning everything out and keeping it simple will go a long way to making a game run smoothly.</li>
+			<li> The easiest (but tedious) part was the assets. After the last game I made, I learned how to make pixel images from normal images, so I already knew that beforehand this time around
+			</li>
+			<li>
+				The hard part was debugging and getting sprites to show up, but this time I had a clear idea that was not too large in scope to be able to create.
+			</li>
+
+			<li><strong>Prototype Assets:</strong></li>
+			<li><a href="https://www.pixilart.com/art/biggie-cheese-e162bd6741925a6">1</a></li>
+			<li><a href="https://www.kissclipart.com/chicken-rooster-cartoon-bird-nose-jd44zq/">2</a></li>
+			<li><a href="https://www.nicepng.com/downpng/u2q8q8a9a9r5y3t4_fried-egg-food-sunny-side-up-cartoon/">3</a></li>
+			<li><a href="https://illustoon.com/?dl=4762">4</a></li>
+			<li><a href="https://www.google.com/imgres?imgurl=https%3A%2F%2Fc8.alamy.com%2Fcomp%2FM9K5RF%2Fvector-illustration-of-roast-chicken-pixel-design-M9K5RF.jpg&imgrefurl=https%3A%2F%2Fwww.alamy.com%2Fvector-illustration-of-roast-chicken-pixel-design-image178057251.html&tbnid=SqVJbV5BQxAfmM&vet=12ahUKEwjNu4CC6P_nAhXJPt8KHVCEB5MQMygAegUIARDdAQ..i&docid=yopOHl3Tp61_6M&w=1300&h=971&q=chicken%20dinner%20pixel%20art&hl=en&ved=2ahUKEwjNu4CC6P_nAhXJPt8KHVCEB5MQMygAegUIARDdAQ#h=971&imgdii=U7o9beZ05w9urM:&vet=12ahUKEwjNu4CC6P_nAhXJPt8KHVCEB5MQMygAegUIARDdAQ..i&w=1300">5</a></li>
+			<li><a href="https://www.deviantart.com/dukejacob3/art/Battle-Axe-701252232">6</a></li>
+			<li><a href="https://www.stickpng.com/img/download/580b57fcd9996e24bc43c301">7</a></li>
+			<li><a href="https://www.pixilart.com/art/poison-effect-f67abdaed94bd24">8</a></li>
+			<li>All other visual assets: original</li>
+			<li>Sound and Music: original</li>
+			</li>
+
+			<li><strong>Borrowed Code:</strong></li>
+			<li><a href="https://phaser.io/examples/v2/arcade-physics/bounding-box">Code source 1</a></li>
+			<li><a href="https://phaser.io/examples/v2/text/center-text">Code source 2</a></li>
+			<li><a href="https://phaser.io/examples/v2/text/display-text-word-by-word">Code source 3</a></li>
+			<li><a href="https://www.joshmorony.com/how-to-create-a-parallax-background-in-phaser/">Code source 4</a></li>
+			<li><a href="https://phaser.io/examples/v2/arcade-physics/bounding-box">Code source 5</a></li>
+			<li><a href="https://phaser.io/examples/v2/arcade-physics/angular-velocity">Code source 6</a></li>
+			<li><a href="https://phaser.io/examples/v2/sprites/sprite-rotation">Code source 7</a></li>
+			<li><a href="https://www.html5gamedevs.com/topic/23217-movetoxy-doesnt-stop-even-when-reached-destination/">Code source 8</a></li>
+			<li><strong>High Concept:</strong>
+				Help Biggie Cheese defeat Chicken Omega and claim your chicken dinner in this action packed shoot em up game.
+			</li>
+
+			<li><strong>Theme:</strong>
+				Chicken
+			</li>
+
+			<li><strong>Mandated Variety:</strong></li>
+			<li>Inputs: mouse click on the play button at the start.</li>
+			<li>Keys: WASD or Arrow keys for movement</li>
+			<li>Randomness: A little bit of randomness (random projectile sprites, random chance to get salmonella when hit)</li>
+			<li>Play styles: Competitor, Joker, Achiever</li>
+			<li>Genres: Shoot em up, shooter, bullethell</li>
+
+			<li><strong>Prototype Goal:</strong>
+				To test shoot em up enemy movements, projectile spawning and movement, player movement, and 'damage' mechanics.
+			</li>
+
+			<li><strong>Player Experience Goals:</strong>
+				The goal is for the player to avoid all eggs while shooting the boss, trying not to get salmonella. This game is also a meme so laughing is okay too.
+			</li>
+
+			<li><strong>Gameplay:</strong>
+				Player Actions:
+			<li>Movement: WASD or Arrow keys</li>
+			<li>Shoot (cutlery): Spacebar</li>
+			<li>In the main menu use mouse to click the play button.</li>
+			<li>Defeat the boss by throwing cutlery at Chicken Omega, avoid salmonella from raw eggs</li>
+			</li>
+
+			<li><strong>Strategies:</strong>
+				Just hold spacebar and then chase the boss, he cant hurt you since you have to wait to die of salmonella.
+			</li>
+
+			<li><strong>Story/Setting/Premise:</strong>
+				Looks like Chicken Omega wants to pick a fight. Lucky for you, Biggie Cheese is a carnivorous rat. Help Biggie defeat this rooster.
+			</li>
+
+			<li><strong>Target Audience:</strong>
+				People who like memes and shmups and bullethells
+			</li>
+
+			<li><strong>Play Time:</strong>
+				1-5 minutes
+			</li>
+
+			</ul>
+		</div>
+	</body>
+</html>
