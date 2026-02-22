@@ -27,11 +27,9 @@ GameStates.makeLevel1 = function (game, shared) {
 	const gravity = 1500;
 
 	function render() {
-
 		game.debug.text(game.time.physicsElapsed, 32, 32);
 		game.debug.body(player);
 		game.debug.bodyInfo(player, 16, 24);
-
 	}
 
 	function quitGame() {
@@ -116,7 +114,7 @@ GameStates.makeLevel1 = function (game, shared) {
 				this.game.cache.getImage('Back1').height,
 				'Back1'
 			);
-			// this.back.fixedToCamera = true;
+			this.back.texture.baseTexture.scaleMode = PIXI.scaleModes.NEAREST
 
 			this.mid = this.game.add.tileSprite(0,
 				0,
@@ -124,7 +122,7 @@ GameStates.makeLevel1 = function (game, shared) {
 				this.game.cache.getImage('Mid1').height,
 				'Mid1'
 			);
-			// this.mid.fixedToCamera = true;
+			this.mid.texture.baseTexture.scaleMode = PIXI.scaleModes.NEAREST;
 
 			this.front = this.game.add.tileSprite(0,
 				0,
@@ -132,7 +130,7 @@ GameStates.makeLevel1 = function (game, shared) {
 				this.game.cache.getImage('Front1').height,
 				'Front1'
 			);
-			// this.front.fixedToCamera = true;
+			this.front.texture.baseTexture.scaleMode = PIXI.scaleModes.NEAREST;
 
 			map = game.add.tilemap('Level1');
 			//game.add.tilemap('level1c');

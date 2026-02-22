@@ -65,7 +65,6 @@ GameStates.makeMainMenu = function (game, shared) {
 					music.play();
 				}
 			}
-			console.log(muteButton.x + "\n");
 		},
 
 		update: function () {

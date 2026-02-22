@@ -265,7 +265,7 @@ GameStates.makeLevel2 = function (game, shared) {
 			game.camera.follow(player, 0.1, 0.1);
 			game.camera.deadzone = null;
 
-			//controls
+			// controls
 			cursors = game.input.keyboard.createCursorKeys();
 			wasd = {
 				up: game.input.keyboard.addKey(Phaser.Keyboard.W),
@@ -282,7 +282,7 @@ GameStates.makeLevel2 = function (game, shared) {
 			wasd.left.onDown.add(function () { detectHit(2) });
 			wasd.right.onDown.add(function () { detectHit(3) });
 
-			//rhythm stuff
+			// rhythm stuff
 			arrowUI = game.add.sprite(100, 0.5, 'Arrows');
 			upLight = game.add.sprite(100, 0.5, 'UpL');
 			downLight = game.add.sprite(100, 0.5, 'DownL');
@@ -320,7 +320,7 @@ GameStates.makeLevel2 = function (game, shared) {
 				game.time.events.add(arrowData[i] - (((game.width - 168) / 500) * 1000) + 100, function () { spawnArrow(i); }, this);
 			}
 
-			//audio
+			// audio
 			music = game.add.audio('BGM2');
 			hitSound = game.add.audio('Blip');
 			music.volume = 1.0;

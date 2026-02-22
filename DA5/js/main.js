@@ -1,7 +1,7 @@
 "use strict";
 
 window.onload = function () {
-	var game = new Phaser.Game(1137, 640, Phaser.CANVAS, 'game');
+	var game = new Phaser.Game(1137, 640, Phaser.CANVAS, 'game', {}, false, false);
 
 	var isMuted = true;
 
