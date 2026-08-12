@@ -23,6 +23,7 @@ GameStates.makeLevel1 = function (game, shared) {
 	var map, layer;
 	var completed = false;
 	var textbox;
+	var lastX = 0;
 
 	const gravity = 1500;
 
@@ -309,7 +310,12 @@ GameStates.makeLevel1 = function (game, shared) {
 			}
 
 			if (cursors.left.isDown || wasd.left.isDown) {
-				if (game.camera.x > 0 && game.camera.x < 4800 - 1137) {
+				// Apply parallax only if we're within the bounds of the level
+				// and the player has actually moved from the last frame.
+				if (game.camera.x > 0
+					&& game.camera.x < 4800 - 1137
+					&& lastX != player.body.x
+				) {
 					this.front.x += 1;
 					this.mid.x += 0.4;
 					this.back.x += 0.05;
@@ -325,7 +331,12 @@ GameStates.makeLevel1 = function (game, shared) {
 			}
 
 			if (cursors.right.isDown || wasd.right.isDown) {
-				if (game.camera.x > 0 && game.camera.x < 4800 - 1137) {
+				// Apply parallax only if we're within the bounds of the level
+				// and the player has actually moved from the last frame.
+				if (game.camera.x > 0
+					&& game.camera.x < 4800 - 1137
+					&& lastX != player.body.x
+				) {
 					this.front.x -= 1;
 					this.mid.x -= 0.4;
 					this.back.x -= 0.05;
@@ -353,7 +364,9 @@ GameStates.makeLevel1 = function (game, shared) {
 				if (player.body !== null)
 					player.body.velocity.y = ((jumpTimer + 200 - (game.time.now)) / 600.0) * (-900.0);
 			}
-
+			// Store the last lateral position of the player so that we can compare with the next frame to determine if the player is actually moving.
+			// Helps us stop the background parallax movement caused by the unreliability of player.body.blocked and player.body.touching.
+			lastX = player.body.x;
 		}
 	};
 
