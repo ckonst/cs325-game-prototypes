@@ -1,16 +1,12 @@
 "use strict";
 
 GameStates.makePreloader = function (game) {
-
     var background = null;
     var preloadBar = null;
-
     var ready = false;
 
     return {
-
         preload: function () {
-
             //Add loading screen assets
             background = game.add.sprite(-200, 0, 'preloaderBackground');
             preloadBar = game.add.sprite(200, 250, 'preloaderBar');
@@ -39,20 +35,14 @@ GameStates.makePreloader = function (game) {
 
             //Victory Screen
             game.load.image('Win', 'assets/img/BiggieCheese.jpg');
-
-
-
         },
 
         create: function () {
-
             //	Once the load has finished we disable the crop because we're going to sit in the update loop for a short while as the music decodes
             preloadBar.cropEnabled = false;
-
         },
 
         update: function () {
-
             //	You don't actually need to do this, but I find it gives a much smoother game experience.
             //	Basically it will wait for our audio file to be decoded before proceeding to the MainMenu.
             //	You can jump right into the menu if you want and still play the music, but you'll have a few
@@ -66,8 +56,6 @@ GameStates.makePreloader = function (game) {
                 ready = true;
                 game.state.start('MainMenu');
             }
-
         }
-
     };
 };

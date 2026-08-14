@@ -1,0 +1,14 @@
+{
+  "name": "cs325-game-prototypes",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write \"DA5/js/**/*.js\"",
+    "format:check": "prettier --check \"DA5/js/**/*.js\"",
+    "lint": "eslint \"DA5/js/**/*.js\""
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "globals": "^16.0.0",
+    "prettier": "^3.0.0"
+  }
+}
