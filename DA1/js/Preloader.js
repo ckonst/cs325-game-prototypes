@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
 GameStates.makePreloader = function (game) {
-    var background = null;
-    var preloadBar = null;
-    var ready = false;
+    let background = null;
+    let preloadBar = null;
+    let ready = false;
 
     return {
         preload: function () {
@@ -17,7 +17,11 @@ GameStates.makePreloader = function (game) {
             game.load.setPreloadSprite(preloadBar);
 
             // Title Screen Assets
-            game.load.atlas('playButton', 'assets/img/play_button.png', 'assets/img/play_button.json');
+            game.load.atlas(
+                'playButton',
+                'assets/img/play_button.png',
+                'assets/img/play_button.json',
+            );
             game.load.audio('titleMusic', ['assets/audio/TitleScreen.ogg']);
             game.load.image('titlePage', 'assets/img/TitleBG.png');
             game.load.image('Title', 'assets/img/BCC.png');
@@ -52,10 +56,10 @@ GameStates.makePreloader = function (game) {
             //	If you don't have any music in your game then put the game.state.start line into the create function and delete
             //	the update function completely.
 
-            if (game.cache.isSoundDecoded('titleMusic') && ready == false) {
+            if (game.cache.isSoundDecoded('titleMusic') && !ready) {
                 ready = true;
                 game.state.start('MainMenu');
             }
-        }
+        },
     };
 };

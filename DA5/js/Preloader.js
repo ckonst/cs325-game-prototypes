@@ -70,7 +70,7 @@ GameStates.makePreloader = (game) => {
             game.load.image('UnmutedIcon', 'assets/img/UI/Unmuted.png');
         },
 
-        create() { },
+        create() {},
 
         update() {
             if (game.cache.isSoundDecoded('TitleMusic') && !ready) {

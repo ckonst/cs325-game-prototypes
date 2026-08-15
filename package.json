@@ -2,9 +2,9 @@
   "name": "cs325-game-prototypes",
   "private": true,
   "scripts": {
-    "format": "prettier --write \"DA5/js/**/*.js\"",
-    "format:check": "prettier --check \"DA5/js/**/*.js\"",
-    "lint": "eslint \"DA5/js/**/*.js\""
+    "format": "prettier --write \"DA{1,2,3,4,5}/js/**/*.js\"",
+    "format:check": "prettier --check \"DA{1,2,3,4,5}/js/**/*.js\"",
+    "lint": "eslint \"DA{1,2,3,4,5}/js/**/*.js\""
   },
   "devDependencies": {
     "eslint": "^9.0.0",
