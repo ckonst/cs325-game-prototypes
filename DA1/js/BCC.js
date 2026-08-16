@@ -1,6 +1,6 @@
 'use strict';
 
-GameStates.makeGame2 = function (game, shared) {
+GameStates.makeGame = function (game, shared) {
     let L;
     let Ls;
     let text1, text2, text3;
@@ -40,8 +40,6 @@ GameStates.makeGame2 = function (game, shared) {
     }
 
     function quitGame() {
-        //  Here you should destroy anything you no longer need.
-        //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
         music.stop();
         player.destroy();
         game.state.start('MainMenu');
@@ -89,14 +87,14 @@ GameStates.makeGame2 = function (game, shared) {
             game.physics.enable(enemy, Phaser.Physics.ARCADE);
 
             const platform_height = 400;
-            //left platform
+            // left platform
             platform1 = game.add.sprite(0, platform_height, 'cobble');
             platform2 = game.add.sprite(32, platform_height, 'cobble');
             platform3 = game.add.sprite(64, platform_height, 'cobble');
             platform4 = game.add.sprite(96, platform_height, 'cobble');
             platform5 = game.add.sprite(128, platform_height, 'cobble');
 
-            //right platform
+            // right platform
             platform6 = game.add.sprite(768, platform_height, 'cobble');
             platform7 = game.add.sprite(736, platform_height, 'cobble');
             platform8 = game.add.sprite(704, platform_height, 'cobble');
@@ -121,7 +119,6 @@ GameStates.makeGame2 = function (game, shared) {
                 platforms[i].body.immovable = true;
             }
 
-            //player.body.bounce.y = 0.2;
             player.body.collideWorldBounds = true;
             player.body.immovable = false;
             player.body.setSize(110, 152, 20, 10);
@@ -134,7 +131,7 @@ GameStates.makeGame2 = function (game, shared) {
             enemy.body.immovable = true;
             enemy.body.setSize(180, 180, 10, 10);
 
-            //audio
+            // audio
             music = game.add.audio('GameBGM');
             music.volume = 0.6;
             shoot_sound = game.add.audio('shoot');
@@ -158,17 +155,16 @@ GameStates.makeGame2 = function (game, shared) {
         },
 
         update: function () {
-            //render();
+            // render();
 
-            //game.physics.arcade.collide(player, layer);
             let onFloor = player.body.onFloor();
             let collided, enemy_collided, bullet_collided;
-            const time = game.time.now;
+            let time = game.time.now;
 
             for (let i = 0; i < platforms.length; i++) {
                 collided |= game.physics.arcade.collide(player, platforms[i]);
 
-                //bullet(s) collided with platform
+                // bullet(s) collided with platform
                 for (let j = 0; j < Ls.length; j++) {
                     if (game.physics.arcade.collide(Ls[j], platforms[i])) {
                         Ls[j].destroy();
@@ -180,30 +176,28 @@ GameStates.makeGame2 = function (game, shared) {
                 player.body.velocity.y = 0;
                 onFloor = true;
                 jumpTimer = 0;
-                console.log('COLLIDE!\n');
             }
             if (
                 game.physics.arcade.collide(player, enemy) &&
                 time > damage_timer
             ) {
-                //take damage
+                // take damage
                 player_health -= 100;
-                //enemy.body.velocity.x *= -1;
                 enemy.body.velocity.y *= -1;
                 damage_timer = time + 100;
             }
 
-            //bullet(s) hit enemy
+            // bullet(s) hit enemy
             for (let i = 0; i < Ls.length; i++) {
                 const cur = Ls[i];
                 bullet_collided = game.physics.arcade.collide(cur, enemy);
                 if (bullet_collided) {
-                    //enemy takes damage
+                    // enemy takes damage
                     enemy_health -= 150;
                     cur.destroy();
                 }
 
-                //bullet(s) hit world bound
+                // bullet(s) hit world bound
                 if (cur !== null && cur.body !== null) {
                     if (
                         cur.body.blocked.down === true ||
@@ -217,12 +211,12 @@ GameStates.makeGame2 = function (game, shared) {
             }
 
             if (player_health < 1) {
-                //player dies
+                // player dies
                 victory = false;
                 quitGame();
             }
             if (enemy_health < 1) {
-                //enemy dies
+                // enemy dies
                 enemy_death_sound.play();
                 enemy.destroy();
                 victory = true;
