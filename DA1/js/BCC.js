@@ -113,10 +113,10 @@ GameStates.makeGame = function (game, shared) {
                 platform10,
             ];
 
-            for (let i = 0; i < platforms.length; i++) {
-                game.physics.enable(platforms[i], Phaser.Physics.ARCADE);
-                platforms[i].body.allowGravity = false;
-                platforms[i].body.immovable = true;
+            for (const platform of platforms) {
+                game.physics.enable(platform, Phaser.Physics.ARCADE);
+                platform.body.allowGravity = false;
+                platform.body.immovable = true;
             }
 
             player.body.collideWorldBounds = true;
@@ -161,12 +161,12 @@ GameStates.makeGame = function (game, shared) {
             let collided, enemy_collided, bullet_collided;
             let time = game.time.now;
 
-            for (let i = 0; i < platforms.length; i++) {
-                collided |= game.physics.arcade.collide(player, platforms[i]);
+            for (const platform of platforms) {
+                collided |= game.physics.arcade.collide(player, platform);
 
                 // bullet(s) collided with platform
                 for (let j = 0; j < Ls.length; j++) {
-                    if (game.physics.arcade.collide(Ls[j], platforms[i])) {
+                    if (game.physics.arcade.collide(Ls[j], platform)) {
                         Ls[j].destroy();
                     }
                 }
@@ -188,25 +188,23 @@ GameStates.makeGame = function (game, shared) {
             }
 
             // bullet(s) hit enemy
-            for (let i = 0; i < Ls.length; i++) {
-                const cur = Ls[i];
-                bullet_collided = game.physics.arcade.collide(cur, enemy);
+            for (const L of Ls) {
+                bullet_collided = game.physics.arcade.collide(L, enemy);
                 if (bullet_collided) {
                     // enemy takes damage
                     enemy_health -= 150;
-                    cur.destroy();
+                    L.destroy();
                 }
 
                 // bullet(s) hit world bound
-                if (cur !== null && cur.body !== null) {
-                    if (
-                        cur.body.blocked.down === true ||
-                        cur.body.blocked.up === true ||
-                        cur.body.blocked.left === true ||
-                        cur.body.blocked.right === true
-                    ) {
-                        Ls[i].destroy();
-                    }
+                const blocked = L?.body?.blocked;
+                if (
+                    blocked?.down ||
+                    blocked?.up ||
+                    blocked?.left ||
+                    blocked?.right
+                ) {
+                    Ls[i].destroy();
                 }
             }
 

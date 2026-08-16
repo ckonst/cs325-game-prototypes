@@ -1,6 +1,6 @@
 'use strict';
 
-GameStates.makeGame2 = function (game, shared) {
+GameStates.makeGame = function (game, shared) {
     const cs1 = [
         'The goal of this game is to do your laundry.',
         'However, due to budget constraints,',
@@ -33,10 +33,17 @@ GameStates.makeGame2 = function (game, shared) {
     let clothesTimer = 0;
     const clothes = []; // a list of all clothes currently in the game
     const washers = []; // a list of the six washing machines UI states (on/off, health, list of clothes), location.
-    const baskets = []; // a list of dicts of clothes in each basket and basket hitbox(4 baskets total)
+    const baskets = []; // a list of dicts of clothes in each basket and basket hitbox (4 baskets total)
     const basketColorWeights = [];
     const basketClothes = [];
-    let cTypes; //clothing types, defined later.
+    const cTypes = {
+        red: ['rPants', 'rShirt', 'panties', 'boxers'],
+        green: ['gPants', 'gShirt', 'boxers'],
+        blue: ['bPants', 'bShirt', 'boxers'],
+        white: ['wPants', 'wShirt'],
+        none: ['baby'],
+    };
+    ; // clothing types
     let UI, basket, cloth;
     let washerInspect;
     let tip1, tip2;
@@ -56,6 +63,7 @@ GameStates.makeGame2 = function (game, shared) {
     let click1, click3;
     let success, beep;
     let cycleFlag = true;
+    let isHovering = false;
 
     //const damage = ['fine', 'troubled', 'broken'];
     const gameTime = 120000;
@@ -66,7 +74,7 @@ GameStates.makeGame2 = function (game, shared) {
     }
 
     function gameStart() {
-        //add the baskets
+        // add the baskets
         for (let i = 0; i < 3; i++) {
             basket = game.add.sprite(48 + i * 300, 500, 'basket');
             game.physics.enable(basket, Phaser.Physics.ARCADE);
@@ -176,23 +184,21 @@ GameStates.makeGame2 = function (game, shared) {
                 }
             }
         }
-        for (let i = 0; i < clothes.length; i++) {
-            if (clothes[i] !== null && clothes[i].body !== null) {
-                speed = Math.floor(Math.random() * 600 - 300);
-                clothes[i].body.velocity.x = speed;
-                speed = Math.floor(Math.random() * -800 - 300);
-                clothes[i].body.velocity.y = speed;
-            }
+        for (const cloth of clothes) {
+            if (!cloth || !cloth.body) continue;
+            speed = Math.floor(Math.random() * 600 - 300);
+            cloth.body.velocity.x = speed;
+            speed = Math.floor(Math.random() * -800 - 300);
+            cloth.body.velocity.y = speed;
         }
     }
 
     function render() {
         game.debug.text(game.time.physicsElapsed, 32, 32);
-        for (let i = 0; i < clothes.length; i++) {
-            if (clothes[i] !== null && clothes[i].body !== null) {
-                game.debug.bodyInfo(clothes[i], 16, 24);
-                game.debug.body(clothes[i]);
-            }
+        for (const cloth of clothes) {
+            if (!cloth || !cloth.body) continue;
+            game.debug.bodyInfo(cloth, 16, 24);
+            game.debug.body(cloth);
         }
 
         console.log('clothes: ');
@@ -204,8 +210,8 @@ GameStates.makeGame2 = function (game, shared) {
     }
 
     function quitGame() {
-        //  Here you should destroy anything you no longer need.
-        //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
+        // Here you should destroy anything you no longer need.
+        // Stop music, delete sprites, purge caches, free resources, all that good stuff.
         music.stop();
         bg.destroy();
         game.state.start('EndScreen');
@@ -220,38 +226,38 @@ GameStates.makeGame2 = function (game, shared) {
             return;
         }
 
-        //  Split the current line on spaces, so one word per array element
+        // Split the current line on spaces, so one word per array element
         line = cs1[lineIndex].split(' ');
 
-        //  Reset the word index to zero (the first word in the line)
+        // Reset the word index to zero (the first word in the line)
         wordIndex = 0;
 
-        //  Call the 'nextWord' function once for each word in the line (line.length)
+        // Call the 'nextWord' function once for each word in the line (line.length)
         game.time.events.repeat(wordDelay, line.length, nextWord, this);
 
-        //  Advance to the next line
+        // Advance to the next line
         lineIndex++;
     }
     function nextWord() {
-        //  Add the next word onto the text string, followed by a space
+        // Add the next word onto the text string, followed by a space
         text.text = text.text.concat(line[wordIndex] + ' ');
 
-        //  Advance the word index to the next word in the line
+        // Advance the word index to the next word in the line
         wordIndex++;
 
-        //  Last word?
+        // Last word?
         if (wordIndex === line.length) {
-            //  Add a carriage return
+            // Add a carriage return
             text.text = text.text.concat('\n');
 
-            //  Get the next line after the lineDelay amount of ms has elapsed
+            // Get the next line after the lineDelay amount of ms has elapsed
             game.time.events.add(lineDelay, nextLine, this);
         }
     }
 
     function washer(washerNum, clothes = null) {
-        //show washer UI
-        //do UI operations
+        // show washer UI
+        // do UI operations
         washer[washerNum] = [];
         washer[washerNum].alpha = 1.0;
         washerInspecting[washerNum] = true;
@@ -262,7 +268,7 @@ GameStates.makeGame2 = function (game, shared) {
     }
 
     function washCycle(washer) {
-        //washing done, play a sound and get points based off of the mode of the colors
+        // washing done, play a sound and get points based off of the mode of the colors
         let total = 0;
         washerClothes[washer] = [];
         const c = washerClothes[washer];
@@ -350,7 +356,7 @@ GameStates.makeGame2 = function (game, shared) {
 
             game.physics.arcade.gravity.y = gravity;
 
-            //controls
+            // controls
             game.input.mouse.capture = true;
 
             feedbackBad[0] = game.add.audio('no1');
@@ -373,18 +379,9 @@ GameStates.makeGame2 = function (game, shared) {
             beep = game.add.audio('beep');
 
             click1 = game.add.audio('click1');
-            //game.add.audio('click2');
             click3 = game.add.audio('click3');
 
-            cTypes = {
-                red: ['rPants', 'rShirt', 'panties', 'boxers'],
-                green: ['gPants', 'gShirt', 'boxers'],
-                blue: ['bPants', 'bShirt', 'boxers'],
-                white: ['wPants', 'wShirt'],
-                none: ['baby'],
-            };
-
-            //adding the washers
+            // adding the washers
             for (let i = 0; i < 6; i++) {
                 UI = game.add.sprite(0, 0, 'UI');
                 washerInspect = game.add.button(48 + i * 167, 370);
@@ -401,7 +398,7 @@ GameStates.makeGame2 = function (game, shared) {
                 washers[i] = UI;
             }
 
-            //audio
+            // audio
             music = game.add.audio('GameBGM');
             music.volume = 0.3;
             tutorial = game.add.audio('tutorial');
@@ -414,7 +411,7 @@ GameStates.makeGame2 = function (game, shared) {
             const time = game.time.now;
             const mouseClick = game.input.activePointer.leftButton.isDown;
 
-            //in tutorial
+            // in tutorial
             if (!tutFlag) {
                 if (mouseClick) {
                     gameStart();
@@ -423,162 +420,160 @@ GameStates.makeGame2 = function (game, shared) {
                 if (time >= washTimer) {
                     if (washTimer === 0) {
                         washTimer = time + 19000;
-                    } else {
-                        if (washy.alpha < 1.0) {
-                            washy.alpha = 1.0;
-                        }
+                    } else if (washy.alpha < 1.0) {
+                        washy.alpha = 1.0;
                     }
                 }
                 return;
             }
 
-            //in game
+            // in game
             if (time >= gameTime) {
-                //game over
+                // game over
                 quitGame();
             }
 
-            //clothes and baskets collision
+            // clothes and baskets collision
 
             for (let j = 0; j < baskets.length; j++) {
                 for (let i = 0; i < clothes.length; i++) {
                     if (
-                        game.physics.arcade.collide(clothes[i], baskets[j]) &&
-                        clothes[i] !== null
-                    ) //cloth has gone into basket
-                    {
-                        basketClothes[j] = clothes[i];
-                        for (let k = 0; k < Object.keys(cTypes).length; k++) {
-                            const rand = Math.floor(Math.random() * 3);
-                            const rand2 = Math.floor(Math.random() * 9);
-                            //play sound for each
-                            const key = clothes[i].key;
+                        !game.physics.arcade.collide(clothes[i], baskets[j]) ||
+                        !clothes[i]
+                    ) continue
 
-                            if (cTypes.red.includes(key)) //RED
-                            {
-                                if (basketColorWeights[j] === 'white') {
-                                    //Mixed whites with non-whites!!!
-                                    feedbackBad[rand].play();
-                                    feedBackCount = 0;
-                                    shared.points -= 1000;
-                                } else if (basketColorWeights[j] === 'red') {
-                                    if (feedBackCount < 6)
-                                        feedbackGood[rand2].play();
-                                    else {
-                                        feedbackExcellent[rand].play();
-                                        success.play();
-                                    }
-                                    feedBackCount += 2;
-                                    shared.points += feedBackCount * 100;
-                                } else if (basketColorWeights[j] === 'none') {
-                                    basketColorWeights[j] = 'red';
-                                    feedbackGood[rand2].play();
-                                    feedBackCount++;
-                                    shared.points += feedBackCount * 100;
-                                } else {
-                                    feedBackCount++;
-                                    shared.points += feedBackCount * 100;
-                                }
-                                break;
-                            } else if (cTypes.green.includes(key)) //GREEN
-                            {
-                                if (basketColorWeights[j] === 'white') {
-                                    //Mixed whites with non-whites!!!
-                                    feedbackBad[rand].play();
-                                    feedBackCount = 0;
-                                    shared.points -= 1000;
-                                } else if (basketColorWeights[j] === 'green') {
-                                    if (feedBackCount < 6)
-                                        feedbackGood[rand2].play();
-                                    else {
-                                        feedbackExcellent[rand].play();
-                                        success.play();
-                                    }
-                                    feedBackCount += 2;
-                                    shared.points += feedBackCount * 100;
-                                } else if (basketColorWeights[j] === 'none') {
-                                    basketColorWeights[j] = 'green';
-                                    feedbackGood[rand2].play();
-                                    feedBackCount++;
-                                    shared.points += feedBackCount * 100;
-                                } else {
-                                    feedBackCount++;
-                                    shared.points += feedBackCount * 100;
-                                }
-                                break;
-                            } else if (cTypes.blue.includes(key)) //BLUE
-                            {
-                                if (basketColorWeights[j] === 'white') {
-                                    //Mixed whites with non-whites!!!
-                                    feedbackBad[rand].play();
-                                    feedBackCount = 0;
-                                    shared.points -= 1000;
-                                } else if (basketColorWeights[j] === 'blue') {
-                                    if (feedBackCount < 6)
-                                        feedbackGood[rand2].play();
-                                    else {
-                                        feedbackExcellent[rand].play();
-                                        success.play();
-                                    }
-                                    feedBackCount += 2;
-                                    shared.points += feedBackCount * 100;
-                                } else if (basketColorWeights[j] === 'none') {
-                                    basketColorWeights[j] = 'blue';
-                                    feedbackGood[rand2].play();
-                                    feedBackCount++;
-                                    shared.points += feedBackCount * 100;
-                                } else {
-                                    feedBackCount++;
-                                    shared.points += feedBackCount * 100;
-                                }
-                                break;
-                            } else if (cTypes.white.includes(key)) //WHITE
-                            {
-                                if (
-                                    basketColorWeights[j] !== 'white' &&
-                                    basketColorWeights[j] !== 'none'
-                                ) {
-                                    //Mixed whites with non-whites!!!
-                                    feedbackBad[rand].play();
-                                    feedBackCount = 0;
-                                    shared.points -= 1000;
-                                } else if (basketColorWeights[j] === 'white') {
-                                    if (feedBackCount < 6)
-                                        feedbackGood[rand2].play();
-                                    else {
-                                        feedbackExcellent[rand].play();
-                                        success.play();
-                                    }
-                                    feedBackCount += 2;
-                                    shared.points += feedBackCount * 100;
-                                } else if (basketColorWeights[j] === 'none') {
-                                    basketColorWeights[j] = 'white';
-                                    feedbackGood[rand2].play();
-                                    feedBackCount++;
-                                    shared.points += feedBackCount * 100;
-                                }
+                    // cloth has gone into basket
+                    basketClothes[j] = clothes[i];
+                    for (let k = 0; k < Object.keys(cTypes).length; k++) {
+                        const rand = Math.floor(Math.random() * 3);
+                        const rand2 = Math.floor(Math.random() * 9);
+                        // play sound for each
+                        const key = clothes[i].key;
 
-                                break;
-                            } else if (cTypes.none.includes(key)) //BABY
-                            {
+                        if (cTypes.red.includes(key)) // RED
+                        {
+                            if (basketColorWeights[j] === 'white') {
+                                // Mixed whites with non-whites!!!
                                 feedbackBad[rand].play();
                                 feedBackCount = 0;
-                                shared.points -= 500;
-                                break;
+                                shared.points -= 1000;
+                            } else if (basketColorWeights[j] === 'red') {
+                                if (feedBackCount < 6)
+                                    feedbackGood[rand2].play();
+                                else {
+                                    feedbackExcellent[rand].play();
+                                    success.play();
+                                }
+                                feedBackCount += 2;
+                                shared.points += feedBackCount * 100;
+                            } else if (basketColorWeights[j] === 'none') {
+                                basketColorWeights[j] = 'red';
+                                feedbackGood[rand2].play();
+                                feedBackCount++;
+                                shared.points += feedBackCount * 100;
+                            } else {
+                                feedBackCount++;
+                                shared.points += feedBackCount * 100;
                             }
+                            break;
+                        } else if (cTypes.green.includes(key)) // GREEN
+                        {
+                            if (basketColorWeights[j] === 'white') {
+                                // Mixed whites with non-whites!!!
+                                feedbackBad[rand].play();
+                                feedBackCount = 0;
+                                shared.points -= 1000;
+                            } else if (basketColorWeights[j] === 'green') {
+                                if (feedBackCount < 6)
+                                    feedbackGood[rand2].play();
+                                else {
+                                    feedbackExcellent[rand].play();
+                                    success.play();
+                                }
+                                feedBackCount += 2;
+                                shared.points += feedBackCount * 100;
+                            } else if (basketColorWeights[j] === 'none') {
+                                basketColorWeights[j] = 'green';
+                                feedbackGood[rand2].play();
+                                feedBackCount++;
+                                shared.points += feedBackCount * 100;
+                            } else {
+                                feedBackCount++;
+                                shared.points += feedBackCount * 100;
+                            }
+                            break;
+                        } else if (cTypes.blue.includes(key)) //BLUE
+                        {
+                            if (basketColorWeights[j] === 'white') {
+                                // Mixed whites with non-whites!!!
+                                feedbackBad[rand].play();
+                                feedBackCount = 0;
+                                shared.points -= 1000;
+                            } else if (basketColorWeights[j] === 'blue') {
+                                if (feedBackCount < 6)
+                                    feedbackGood[rand2].play();
+                                else {
+                                    feedbackExcellent[rand].play();
+                                    success.play();
+                                }
+                                feedBackCount += 2;
+                                shared.points += feedBackCount * 100;
+                            } else if (basketColorWeights[j] === 'none') {
+                                basketColorWeights[j] = 'blue';
+                                feedbackGood[rand2].play();
+                                feedBackCount++;
+                                shared.points += feedBackCount * 100;
+                            } else {
+                                feedBackCount++;
+                                shared.points += feedBackCount * 100;
+                            }
+                            break;
+                        } else if (cTypes.white.includes(key)) // WHITE
+                        {
+                            if (
+                                basketColorWeights[j] !== 'white' &&
+                                basketColorWeights[j] !== 'none'
+                            ) {
+                                // Mixed whites with non-whites!!!
+                                feedbackBad[rand].play();
+                                feedBackCount = 0;
+                                shared.points -= 1000;
+                            } else if (basketColorWeights[j] === 'white') {
+                                if (feedBackCount < 6)
+                                    feedbackGood[rand2].play();
+                                else {
+                                    feedbackExcellent[rand].play();
+                                    success.play();
+                                }
+                                feedBackCount += 2;
+                                shared.points += feedBackCount * 100;
+                            } else if (basketColorWeights[j] === 'none') {
+                                basketColorWeights[j] = 'white';
+                                feedbackGood[rand2].play();
+                                feedBackCount++;
+                                shared.points += feedBackCount * 100;
+                            }
+
+                            break;
+                        } else if (cTypes.none.includes(key)) // BABY
+                        {
+                            feedbackBad[rand].play();
+                            feedBackCount = 0;
+                            shared.points -= 500;
+                            break;
                         }
-                        clothes[i].destroy();
                     }
+                    clothes[i].destroy();
                 }
             }
 
             score.setText('points: ' + shared.points);
             timer.setText('Time Left: ' + Math.floor((gameTime - time) / 1000));
 
-            //show tooltips
-            //get index of basket last clicked
+            // show tooltips
+            // get index of basket last clicked
             for (let i = 0; i < baskets.length; i++) {
-                const isHovering = baskets[i].input.pointerOver();
+                isHovering = baskets[i].input.pointerOver();
                 if (isHovering) {
                     tip2.alpha = 1.0;
                     tip1.alpha = 0.0;
@@ -590,63 +585,50 @@ GameStates.makeGame2 = function (game, shared) {
                 if (isHovering && mouseClick) {
                     basketIndex = i;
                 }
-            }
-            if (isHovering === false) {
-                basketIndex = -1;
+                if (isHovering === false) {
+                    basketIndex = -1;
+                }
             }
 
-            //washers
+            // washers
             for (let i = 0; i < washers.length; i++) {
-                const isHovering = washers[i].input.pointerOver();
-                if (washerInspecting[i] === false) {
-                    if (isHovering && mouseClick) {
-                        if (basketIndex !== -1)
-                            washer(i, basketClothes[basketIndex]);
-                        else washer(i);
-                    }
-                } else {
-                    if (mouseClick && cycleFlag) {
-                        click3.play();
-                        cycleFlag = false;
-                        game.time.events.add(10000, () => washCycle(i), this);
-                    }
+                isHovering = washers[i].input.pointerOver();
+                if (!washerInspecting[i] && isHovering && mouseClick) {
+                    const _clothes = basketIndex !== -1 ? basketClothes[basketIndex] : null;
+                    washer(i, _clothes);
+                } else if (mouseClick && cycleFlag) {
+                    click3.play();
+                    cycleFlag = false;
+                    game.time.events.add(10000, () => washCycle(i), this);
                 }
             }
 
-            //clothes spewing
+            // clothes spewing
             if (time >= clothesTimer) {
-                if (clothesTimer === 0) {
-                    clothesTimer = time + 3000;
-                } else {
-                    //Washy spews clothes
+                if (clothesTimer !== 0)
                     spewClothing();
-                    clothesTimer = 0;
-                }
+                clothesTimer = clothesTimer === 0 ? time + 3000 : 0;
             }
 
             // destroy clothes if they touch the ground
-            for (let i = 0; i < clothes.length; i++) {
-                if (clothes[i] !== null && clothes[i].body !== null) {
-                    if (clothes[i].body.blocked.down) {
-                        clothes[i].destroy();
-                    }
+            for (const cloth of clothes) {
+                if (cloth?.body?.blocked?.down) {
+                    cloth.destroy();
                 }
             }
 
-            //Washy's movement
-            if (washy !== null && washy.body !== null) {
-                if (washy.body.blocked.down === true) {
-                    washy.body.velocity.y = -300;
-                }
-                if (washy.body.blocked.up === true) {
-                    washy.body.velocity.y = 300;
-                }
-                if (washy.body.blocked.left === true) {
-                    washy.body.velocity.x = 200;
-                }
-                if (washy.body.blocked.right === true) {
-                    washy.body.velocity.x = -200;
-                }
+            // Washy's movement
+            if (washy?.body?.blocked?.down) {
+                washy.body.velocity.y = -300;
+            }
+            if (washy?.body?.blocked?.up) {
+                washy.body.velocity.y = 300;
+            }
+            if (washy?.body?.blocked?.left) {
+                washy.body.velocity.x = 200;
+            }
+            if (washy?.body?.blocked?.right) {
+                washy.body.velocity.x = -200;
             }
         },
     };
