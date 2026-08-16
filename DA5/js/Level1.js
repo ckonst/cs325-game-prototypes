@@ -115,7 +115,7 @@ GameStates.makeLevel1 = (game, shared) => {
 
         // last character
         if (charIndex === line.length - 1) {
-            //  add a carriage return
+            // add a carriage return
             txt.text = txt.text.concat('\n');
 
             // go to the next line
@@ -193,12 +193,10 @@ GameStates.makeLevel1 = (game, shared) => {
                 }
             }
 
-            //  Create the layer
             layer = map.createLayer('Level1Layer');
-            //  Resize the world
             layer.resizeWorld();
 
-            //  Un-comment this on to see the collision tiles
+            // Un-comment this on to see the collision tiles
             // layer.debug = true;
 
             textbox = game.add.sprite(0, 60, 'TextBox');

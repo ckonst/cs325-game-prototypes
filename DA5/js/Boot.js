@@ -4,10 +4,7 @@ const GameStates = (window.GameStates ??= {});
 
 GameStates.makeBoot = (game) => ({
     init() {
-        // Unless you specifically know your game needs to support multi-touch, limit it to one pointer.
         game.input.maxPointers = 1;
-
-        // Keep the game active when the browser tab loses focus.
         game.stage.disableVisibilityChange = true;
 
         if (game.device.desktop) {

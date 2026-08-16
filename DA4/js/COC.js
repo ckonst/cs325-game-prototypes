@@ -207,7 +207,7 @@ GameStates.makeGame = function (game, shared) {
 
             game.physics.arcade.gravity.y = gravity;
 
-            //controls
+            // controls
             game.input.mouse.capture = true;
             cursors = game.input.keyboard.createCursorKeys();
             wasd = {
@@ -218,7 +218,7 @@ GameStates.makeGame = function (game, shared) {
             };
             shoot_button = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-            //audio
+            // audio
             music = game.add.audio('gameBGM');
             music.volume = 0.6;
 
@@ -254,24 +254,24 @@ GameStates.makeGame = function (game, shared) {
 
             // Win Condition
             if (HP < 0) {
-                //game over
-                winFlag = true; //you won
+                // game over
+                winFlag = true; // you won
                 eDefeat.play();
                 quitGame();
             }
 
             // Failure condition
-            if (salmonellaFlag) //if you have salmonella, you will die
+            if (salmonellaFlag) // if you have salmonella, you will die
             {
                 if (deathTimer === 0) {
                     deathTimer = time + salmonellaTime;
                 }
                 timer.setText(
                     'Salmonella will kill you in: ' +
-                        Math.floor((deathTimer - time) / 1000),
+                    Math.floor((deathTimer - time) / 1000),
                 );
                 if (time >= deathTimer) {
-                    //game over
+                    // game over
                     winFlag = false; // you lost
                     quitGame();
                 }

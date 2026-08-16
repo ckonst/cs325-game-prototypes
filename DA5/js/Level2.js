@@ -35,7 +35,7 @@ GameStates.makeLevel2 = (game, shared) => {
     let finished = false;
     let muteButton;
 
-    //rhythm UI stuff
+    // rhythm UI stuff
     let arrows = [];
     let arrowData = [];
     let arrowUI, upLight, downLight, leftLight, rightLight;
@@ -118,8 +118,6 @@ GameStates.makeLevel2 = (game, shared) => {
     }
 
     function quitGame() {
-        //  Here you should destroy anything you no longer need.
-        //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
         music.stop();
         player.destroy();
         text1.destroy();
@@ -135,7 +133,7 @@ GameStates.makeLevel2 = (game, shared) => {
 
     function nextLine(txt, str) {
         if (lineIndex === str.length) {
-            //  We're finished
+            // We're finished
             lineIndex = 0;
             charIndex = 0;
             game.time.events.add(
@@ -148,13 +146,13 @@ GameStates.makeLevel2 = (game, shared) => {
             return;
         }
         textbox.alpha = 1.0;
-        //  get next line
+        // get next line
         line = str[lineIndex];
 
         // reset char index
         charIndex = 0;
 
-        //  Call the 'nextChar' function once for each char in the line (line.length)
+        // Call the 'nextChar' function once for each char in the line (line.length)
         game.time.events.repeat(
             charDelay,
             line.length,
@@ -164,25 +162,25 @@ GameStates.makeLevel2 = (game, shared) => {
             this,
         );
 
-        //  Advance to the next line
+        // Advance to the next line
         lineIndex++;
     }
 
     function nextChar(txt, str) {
-        //get the current char
+        // get the current char
         character = line.charAt(charIndex);
 
-        //  Add the next char into the string
+        // Add the next char into the string
         if (character !== null) {
             txt.text = txt.text.concat(character);
         }
 
-        //last character
+        // last character
         if (charIndex === line.length - 1) {
             //  Add a carriage return
             txt.text = txt.text.concat('\n');
 
-            //Go to the next line
+            // Go to the next line
             game.time.events.add(
                 lineDelay,
                 function () {
