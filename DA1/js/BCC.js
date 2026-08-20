@@ -9,8 +9,8 @@ GameStates.makeGame = function (game, shared) {
     let jumpTimer = 0,
         projectileTimer = 0,
         damageTimer = 0,
-        movementTimerX = 0,
-        movementTimerY = 0;
+        enemyMovementTimerX = 0,
+        enemyMovementTimerY = 0;
     let cursors;
     let jumpButton;
     let bg;
@@ -132,28 +132,31 @@ GameStates.makeGame = function (game, shared) {
         },
 
         update: function () {
-            // render();
-
             let onFloor = player.body.onFloor();
-            let collided, enemy_collided, bullet_collided;
             let time = game.time.now;
 
+            // player collided with platform
             for (const platform of platforms) {
-                collided |= game.physics.arcade.collide(player, platform);
-
-                // bullet(s) collided with platform
-                for (let j = 0; j < Ls.length; j++) {
-                    if (game.physics.arcade.collide(Ls[j], platform)) {
-                        Ls[j].destroy();
-                    }
+                if (game.physics.arcade.collide(player, platform)) {
+                    player.body.velocity.y = 0;
+                    onFloor = true;
+                    jumpTimer = 0;
+                    break;
                 }
             }
 
-            if (collided) {
-                player.body.velocity.y = 0;
-                onFloor = true;
-                jumpTimer = 0;
+            // bullet(s) collided with platform
+            for (const L of Ls) {
+                // The two inner sprites are the only ones that can possibly collide with the Ls,
+                // as long as they are only allowed to move horizontally.
+                if (game.physics.arcade.collide(L, platforms[4]) ||
+                    game.physics.arcade.collide(L, platforms[9])
+                ) {
+                    L.destroy();
+                }
             }
+
+            // player collided with enemy
             if (
                 game.physics.arcade.collide(player, enemy) &&
                 time > damageTimer
@@ -164,32 +167,44 @@ GameStates.makeGame = function (game, shared) {
                 damageTimer = time + 100;
             }
 
+            if (playerHealth < 1) {
+                // player dies
+                victory = false;
+                Ls = [];
+                quitGame();
+                // game is over, everything is destroyed, so return early to prevent error
+                return;
+            }
+
+            // list of bullet indices that have been destroyed and are waiting to be removed from the active Ls list
+            let deadBulletIndices = [];
+
             // bullet(s) hit enemy
-            for (const L of Ls) {
-                bullet_collided = game.physics.arcade.collide(L, enemy);
-                if (bullet_collided) {
+            for (const [i, L] of Ls.entries()) {
+                if (game.physics.arcade.collide(L, enemy)) {
                     // enemy takes damage
                     enemyHealth -= 150;
+                    deadBulletIndices.push(i);
                     L.destroy();
                 }
 
                 // bullet(s) hit world bound
                 const blocked = L?.body?.blocked;
-                if (
-                    blocked?.down ||
-                    blocked?.up ||
-                    blocked?.left ||
-                    blocked?.right
+                if (blocked && (
+                    blocked.down ||
+                    blocked.up ||
+                    blocked.left ||
+                    blocked.right)
                 ) {
-                    Ls[i].destroy();
+                    deadBulletIndices.push(i);
+                    L.destroy();
                 }
             }
 
-            if (playerHealth < 1) {
-                // player dies
-                victory = false;
-                quitGame();
-            }
+            // Remove any destroyed Ls, and reset the dead bullet list
+            Ls = Ls.filter((_, index) => !deadBulletIndices.includes(index));
+            deadBulletIndices = [];
+
             if (enemyHealth < 1) {
                 // enemy dies
                 enemyDeathSound.play();
@@ -197,35 +212,31 @@ GameStates.makeGame = function (game, shared) {
                 victory = true;
                 music.stop();
                 game.state.start('Victory');
+                Ls = [];
+                // game is over, everything is destroyed, so return early to prevent error
+                return;
             }
 
-            if (player.body !== null) player.body.velocity.x = 0;
+            player.body.velocity.x = 0;
             time = game.time.now;
-            if (enemy.body !== null) {
-                if (enemy.body.velocity.x === 0) enemy.body.velocity.x = 300;
-                if (enemy.body.velocity.y === 0) enemy.body.velocity.y = -300;
-                if (time > movementTimerX) {
-                    movementTimerX = time + 2000;
-                    enemy.body.velocity.x *= -1;
-                }
-                if (time > movementTimerY) {
-                    movementTimerY = time + 2200;
-                    enemy.body.velocity.y *= -1;
-                }
+
+            if (enemy.body.velocity.x === 0) enemy.body.velocity.x = 300;
+            if (enemy.body.velocity.y === 0) enemy.body.velocity.y = -300;
+            if (time > enemyMovementTimerX) {
+                enemyMovementTimerX = time + 2000;
+                enemy.body.velocity.x *= -1;
+            }
+            if (time > enemyMovementTimerY) {
+                enemyMovementTimerY = time + 2200;
+                enemy.body.velocity.y *= -1;
             }
 
             if (cursors.left.isDown || wasd.left.isDown) {
-                if (player.body !== null) player.body.velocity.x = -315;
-
-                if (facing !== 'left') {
-                    facing = 'left';
-                }
+                player.body.velocity.x = -315;
+                facing = 'left';
             } else if (cursors.right.isDown || wasd.right.isDown) {
-                if (player.body !== null) player.body.velocity.x = 315;
-
-                if (facing !== 'right') {
-                    facing = 'right';
-                }
+                player.body.velocity.x = 315;
+                facing = 'right';
             }
 
             if (shootButton.isDown && time > projectileTimer) {
@@ -253,13 +264,12 @@ GameStates.makeGame = function (game, shared) {
 
             if (jumpButton.isDown && onFloor && time > jumpTimer) {
                 jumpSound.play();
-                if (player.body !== null) player.body.velocity.y = -1075;
+                player.body.velocity.y = -1075;
                 jumpTimer = time + 300;
                 jumped = true;
             } else if (!onFloor && jumped) {
-                if (player.body !== null)
-                    player.body.velocity.y =
-                        ((jumpTimer + 200 - game.time.now) / 600.0) * -1075.0;
+                player.body.velocity.y =
+                    ((jumpTimer + 200 - game.time.now) / 600.0) * -1075.0;
             }
         },
     };
