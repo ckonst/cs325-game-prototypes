@@ -18,8 +18,8 @@ GameStates.makePreloader = function (game) {
             // Title Screen Assets
             game.load.atlas(
                 'playButton',
-                'assets/img/play_button.png',
-                'assets/img/play_button.json',
+                'assets/img/PlayButton.png',
+                'assets/img/PlayButton.json',
             );
             game.load.audio('titleMusic', ['assets/audio/TitleScreen.ogg']);
             game.load.image('titlePage', 'assets/img/TitleBG.png');
@@ -27,14 +27,14 @@ GameStates.makePreloader = function (game) {
 
             // Main Game assets
             game.load.audio('GameBGM', ['assets/audio/GameBGM.ogg']);
-            game.load.audio('shoot', ['assets/audio/shoot.ogg']);
-            game.load.audio('jump', ['assets/audio/jump.ogg']);
-            game.load.audio('death', ['assets/audio/enemy_death2.ogg']);
-            game.load.image('cheese', 'assets/img/biggie-cheese-small.png');
-            game.load.image('cobble', 'assets/img/cobblestone_texture.png');
+            game.load.audio('shoot', ['assets/audio/Shoot.ogg']);
+            game.load.audio('jump', ['assets/audio/Jump.ogg']);
+            game.load.audio('death', ['assets/audio/EnemyDeath.ogg']);
+            game.load.image('cheese', 'assets/img/BiggieCheeseSmall.png');
+            game.load.image('cobble', 'assets/img/CobblestoneTexture.png');
             game.load.image('background', 'assets/img/Background.png');
-            game.load.image('pepe', 'assets/img/trumpy.png');
-            game.load.image('L', 'assets/img/smallL.png');
+            game.load.image('pepe', 'assets/img/Trumpepe.png');
+            game.load.image('L', 'assets/img/SmallL.png');
 
             // Victory Screen
             game.load.image('Win', 'assets/img/BiggieCheese.jpg');

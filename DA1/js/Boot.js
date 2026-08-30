@@ -22,9 +22,9 @@ GameStates.makeBoot = function (game) {
         preload: function () {
             game.load.image(
                 'preloaderBackground',
-                'assets/img/preloader_background.jpg',
+                'assets/img/PreloaderBackground.jpg',
             );
-            game.load.image('preloaderBar', 'assets/img/preloader_bar.png');
+            game.load.image('preloaderBar', 'assets/img/PreloaderBar.png');
         },
 
         create: function () {
