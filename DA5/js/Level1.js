@@ -131,11 +131,106 @@ GameStates.makeLevel1 = (game, shared) => {
         charIndex++;
     }
 
+    const rgb = (phaserPixel) => {
+        return {
+            r: phaserPixel.r,
+            g: phaserPixel.g,
+            b: phaserPixel.b,
+        }
+    }
+
+    const getRGBA = (x, y, bitMapData) => {
+        const uint8Clamped = bitMapData.data;
+        const index = [y * bitMapData.width] + x;
+        // rgba
+        return [index, index + 1, index + 2, index + 3];
+    }
+
+    const fastEqualsRGBA = (position, bitMapData, colorRGBA) => {
+        const uint8Clamped = bitMapData.data;
+        const index = [position.y * bitMapData.width] + position.x;
+        return uint8Clamped[index] === colorRGBA[0] &&
+            uint8Clamped[index + 1] === colorRGBA[1] &&
+            uint8Clamped[index + 2] === colorRGBA[2] &&
+            uint8Clamped[index + 3] === colorRGBA[3];
+    }
+
+    const inBounds = (x, y, width, height) => {
+        return x < 0 || x > width - 1 || y < 0 || y > height - 1;
+    }
+
+    function floodFill(position, bitMapData, boundaryColor) {
+        let visitedPixels = new Set();
+        let spritePixels = [];
+        let queue = [];
+        const directions = {
+            up: [0, -1],
+            down: [0, 1],
+            left: [-1, 0],
+            right: [1, 0],
+            upleft: [-1, -1],
+            upright: [1, -1],
+            downleft: [-1, 1],
+            downright: [1, 1],
+        }
+        const enqueueUnvisitedNeighborsOf = ([x, y]) => {
+            for (const [dx, dy] of Object.values(directions)) {
+                const newPosition = [x + dx, y + dy];
+                if (
+                    visitedPixels.has(newPosition) ||
+                    fastEqualsRGBA(newPosition, bitMapData, boundaryColor) ||
+                    !inBounds(...newPosition, bitMapData.width, bitMapData.height)
+                ) continue;
+                queue.push(newPosition);
+                // pre-emptively add new pixels now to avoid recursively queueing neighboring pixels.
+                visitedPixels.add(newPosition);
+            }
+        };
+        enqueueUnvisitedNeighborsOf(position);
+        while (queue.length > 0) {
+            const [x, y] = queue.pop();
+            if (!inBounds(x, y, bitMapData.width, bitMapData.height)) continue;
+            if (!fastEqualsRGBA([x, y], bitMapData, boundaryColor)) {
+                spritePixels.push([x, y]);
+                enqueueUnvisitedNeighborsOf([x, y]);
+            }
+            visitedPixels.add([x, y]);
+        }
+        return spritePixels;
+    }
+
+    function getTileSpriteIndex(imageKey) {
+        // All sprites are the exact same shape in the same layout for each layer, so the index will be uniform across them.
+        const image = game.cache.getImage(imageKey);
+
+        // Take the first pixel (0, 0) of any of the image layers, this is guarenteed to be a background pixel.
+        const bitMapData = game.make.bitmapData(image.width, image.height);
+        bitMapData.draw(imageKey);
+        bitMapData.update();
+
+        // For level 1, this will be a black, invisible color: 0x000000
+        const backgroundColor = getRGBA(0, 0, bitMapData);
+
+        let visitedPixels = new Set();
+        let tileSpriteIndex = [];
+
+        for (let y = 0; y < bitMapData.height; y++) {
+            for (let x = 0; x < bitMapData.width; x++) {
+                if (visitedPixels.has([x, y]) || fastEqualsRGBA([x, y], bitMapData, backgroundColor)) continue;
+                const spritePixels = floodFill([x, y], bitMapData, backgroundColor);
+                tileSpriteIndex.push(spritePixels);
+                spritePixels.forEach(([x, y]) => visitedPixels.push([x, y]));
+            }
+        }
+    }
+
     return {
         create() {
             game.physics.startSystem(Phaser.Physics.ARCADE);
 
             game.stage.backgroundColor = '#abb4cc';
+
+            getTileSpriteIndex('ForestTreeFront');
 
             this.back = this.game.add.tileSprite(
                 0,

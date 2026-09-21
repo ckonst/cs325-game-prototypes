@@ -34,6 +34,7 @@ GameStates.makePreloader = (game) => {
                 null,
                 Phaser.Tilemap.TILED_JSON,
             );
+            game.load.image('ForestTreeFront', 'assets/img/Level1/ForestTreeFront.png');
             game.load.image('Tiles1', 'assets/img/Level1/ForestTiles.png');
             game.load.image('Front1', 'assets/img/Level1/ForestFront.png');
             game.load.image('Mid1', 'assets/img/Level1/ForestMid.png');
@@ -70,7 +71,7 @@ GameStates.makePreloader = (game) => {
             game.load.image('UnmutedIcon', 'assets/img/UI/Unmuted.png');
         },
 
-        create() {},
+        create() { },
 
         update() {
             if (game.cache.isSoundDecoded('TitleMusic') && !ready) {

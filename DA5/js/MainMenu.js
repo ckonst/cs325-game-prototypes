@@ -44,17 +44,7 @@ GameStates.makeMainMenu = (game, shared) => {
             playButton.tint = 0x2e7794;
             game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
 
-            const muteButton = game.add.button(
-                game.world.width - 50,
-                50,
-                'MutedIcon',
-                toggleMute,
-                this,
-            );
-            muteButton.scale.set(0.5, 0.5);
-            muteButton.anchor.set(0.5);
-
-            function toggleMute() {
+            const toggleMute = () => {
                 shared.isMuted = !shared.isMuted;
                 game.sound.mute = shared.isMuted;
                 muteButton.loadTexture(
@@ -65,6 +55,16 @@ GameStates.makeMainMenu = (game, shared) => {
                     music.play();
                 }
             }
+
+            const muteButton = game.add.button(
+                game.world.width - 50,
+                50,
+                'MutedIcon',
+                toggleMute,
+                this,
+            );
+            muteButton.scale.set(0.5, 0.5);
+            muteButton.anchor.set(0.5);
         },
 
         update() {
