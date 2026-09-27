@@ -156,11 +156,10 @@ GameStates.makeLevel1 = (game, shared) => {
     }
 
     const inBounds = (x, y, width, height) => {
-        return x < 0 || x > width - 1 || y < 0 || y > height - 1;
+        return x >= 0 && x < width && y >= 0 && y < height;
     }
 
-    function floodFill(position, bitMapData, boundaryColor) {
-        let visitedPixels = new Set();
+    function floodFill(position, bitMapData, boundaryColor, visitedPixels) {
         let spritePixels = [];
         let queue = [];
         const directions = {
@@ -180,7 +179,11 @@ GameStates.makeLevel1 = (game, shared) => {
                     visitedPixels.has(newPosition) ||
                     fastEqualsRGBA(newPosition, bitMapData, boundaryColor) ||
                     !inBounds(...newPosition, bitMapData.width, bitMapData.height)
-                ) continue;
+                ) {
+                    continue;
+                }
+                console.log(newPosition);
+                console.log(visitedPixels);
                 queue.push(newPosition);
                 // pre-emptively add new pixels now to avoid recursively queueing neighboring pixels.
                 visitedPixels.add(newPosition);
@@ -217,11 +220,13 @@ GameStates.makeLevel1 = (game, shared) => {
         for (let y = 0; y < bitMapData.height; y++) {
             for (let x = 0; x < bitMapData.width; x++) {
                 if (visitedPixels.has([x, y]) || fastEqualsRGBA([x, y], bitMapData, backgroundColor)) continue;
-                const spritePixels = floodFill([x, y], bitMapData, backgroundColor);
+                const spritePixels = floodFill([x, y], bitMapData, backgroundColor, visitedPixels);
                 tileSpriteIndex.push(spritePixels);
                 spritePixels.forEach(([x, y]) => visitedPixels.push([x, y]));
             }
         }
+
+        return tileSpriteIndex;
     }
 
     return {
@@ -230,7 +235,8 @@ GameStates.makeLevel1 = (game, shared) => {
 
             game.stage.backgroundColor = '#abb4cc';
 
-            getTileSpriteIndex('ForestTreeFront');
+            // TODO: save to JSON, track in git, load and blit to test screen to validate.
+            const tileSpriteIndex = getTileSpriteIndex('ForestTreeFront');
 
             this.back = this.game.add.tileSprite(
                 0,

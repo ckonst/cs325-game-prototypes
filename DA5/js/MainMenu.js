@@ -42,7 +42,7 @@ GameStates.makeMainMenu = (game, shared) => {
                 'down',
             );
             playButton.tint = 0x2e7794;
-            game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
+            //game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
 
             const toggleMute = () => {
                 shared.isMuted = !shared.isMuted;
@@ -68,7 +68,7 @@ GameStates.makeMainMenu = (game, shared) => {
         },
 
         update() {
-            game.input.onDown.add(goFullScreen, this);
+            //game.input.onDown.add(goFullScreen, this);
         },
     };
 };
