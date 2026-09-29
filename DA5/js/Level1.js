@@ -150,7 +150,7 @@ GameStates.makeLevel1 = (game, shared) => {
         ];
     }
 
-    const fastEqualsRGBA = (position, bitMapData, colorRGBA) => {
+    const fastEqualsRGBA = (x, y, bitMapData, colorRGBA) => {
         const uint8Clamped = bitMapData.data;
         const index = (position[1] * bitMapData.width) + position[0];
         return uint8Clamped[index] === colorRGBA[0] &&
@@ -163,7 +163,7 @@ GameStates.makeLevel1 = (game, shared) => {
         return x >= 0 && x < width && y >= 0 && y < height;
     }
 
-    function floodFill(position, bitMapData, boundaryColor, visitedPixels) {
+    function floodFill(x, y, bitMapData, boundaryColor, visitedPixels) {
         let spritePixels = [];
         let queue = [];
         const directions = {
@@ -176,12 +176,12 @@ GameStates.makeLevel1 = (game, shared) => {
             downleft: [-1, 1],
             downright: [1, 1],
         }
-        const enqueueUnvisitedNeighborsOf = ([x, y]) => {
+        const enqueueUnvisitedNeighborsOf = (x, y) => {
             for (const [dx, dy] of Object.values(directions)) {
                 const newPosition = [x + dx, y + dy];
                 if (
                     visitedPixels.has(newPosition) ||
-                    fastEqualsRGBA(newPosition, bitMapData, boundaryColor) ||
+                    fastEqualsRGBA(...newPosition, bitMapData, boundaryColor) ||
                     !inBounds(...newPosition, bitMapData.width, bitMapData.height)
                 ) {
                     continue;
@@ -191,13 +191,13 @@ GameStates.makeLevel1 = (game, shared) => {
                 visitedPixels.add(newPosition);
             }
         };
-        enqueueUnvisitedNeighborsOf(position);
+        enqueueUnvisitedNeighborsOf(...position);
         while (queue.length > 0) {
             const [x, y] = queue.pop();
             if (!inBounds(x, y, bitMapData.width, bitMapData.height)) continue;
-            if (!fastEqualsRGBA([x, y], bitMapData, boundaryColor)) {
+            if (!fastEqualsRGBA(x, y, bitMapData, boundaryColor)) {
                 spritePixels.push([x, y]);
-                enqueueUnvisitedNeighborsOf([x, y]);
+                enqueueUnvisitedNeighborsOf(x, y);
             }
             visitedPixels.add([x, y]);
         }
@@ -221,9 +221,9 @@ GameStates.makeLevel1 = (game, shared) => {
 
         for (let y = 0; y < bitMapData.height; y++) {
             for (let x = 0; x < bitMapData.width; x++) {
-                if (visitedPixels.has([x, y]) || fastEqualsRGBA([x, y], bitMapData, backgroundColor)) continue;
+                if (visitedPixels.has([x, y]) || fastEqualsRGBA(x, y, bitMapData, backgroundColor)) continue;
                 const color = getRGBA(x, y, bitMapData);
-                const spritePixels = floodFill([x, y], bitMapData, backgroundColor, visitedPixels);
+                const spritePixels = floodFill(x, y, bitMapData, backgroundColor, visitedPixels);
                 tileSpriteIndex.push(spritePixels);
                 spritePixels.forEach(([x, y]) => visitedPixels.push([x, y]));
             }
