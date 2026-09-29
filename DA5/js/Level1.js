@@ -141,14 +141,18 @@ GameStates.makeLevel1 = (game, shared) => {
 
     const getRGBA = (x, y, bitMapData) => {
         const uint8Clamped = bitMapData.data;
-        const index = [y * bitMapData.width] + x;
-        // rgba
-        return [index, index + 1, index + 2, index + 3];
+        const index = (y * bitMapData.width) + x;
+        return [
+            uint8Clamped[index],
+            uint8Clamped[index + 1],
+            uint8Clamped[index + 2],
+            uint8Clamped[index + 3],
+        ];
     }
 
     const fastEqualsRGBA = (position, bitMapData, colorRGBA) => {
         const uint8Clamped = bitMapData.data;
-        const index = [position.y * bitMapData.width] + position.x;
+        const index = (position[1] * bitMapData.width) + position[0];
         return uint8Clamped[index] === colorRGBA[0] &&
             uint8Clamped[index + 1] === colorRGBA[1] &&
             uint8Clamped[index + 2] === colorRGBA[2] &&
@@ -182,8 +186,6 @@ GameStates.makeLevel1 = (game, shared) => {
                 ) {
                     continue;
                 }
-                console.log(newPosition);
-                console.log(visitedPixels);
                 queue.push(newPosition);
                 // pre-emptively add new pixels now to avoid recursively queueing neighboring pixels.
                 visitedPixels.add(newPosition);
@@ -220,6 +222,7 @@ GameStates.makeLevel1 = (game, shared) => {
         for (let y = 0; y < bitMapData.height; y++) {
             for (let x = 0; x < bitMapData.width; x++) {
                 if (visitedPixels.has([x, y]) || fastEqualsRGBA([x, y], bitMapData, backgroundColor)) continue;
+                const color = getRGBA(x, y, bitMapData);
                 const spritePixels = floodFill([x, y], bitMapData, backgroundColor, visitedPixels);
                 tileSpriteIndex.push(spritePixels);
                 spritePixels.forEach(([x, y]) => visitedPixels.push([x, y]));
