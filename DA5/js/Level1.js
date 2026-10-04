@@ -142,7 +142,7 @@ GameStates.makeLevel1 = (game, shared) => {
     const getRGBA = (x, y, bitMapData) => {
         const stride = 4; // RGBA
         const uint8Clamped = bitMapData.data;
-        const index = (y * bitMapData.width) + x * stride;
+        const index = (y * bitMapData.width + x) * stride;
         return [
             uint8Clamped[index],
             uint8Clamped[index + 1],
@@ -154,7 +154,7 @@ GameStates.makeLevel1 = (game, shared) => {
     const fastEqualsRGBA = (x, y, bitMapData, colorRGBA) => {
         const stride = 4; // RGBA
         const uint8Clamped = bitMapData.data;
-        const index = (y * bitMapData.width) + x * stride;
+        const index = (y * bitMapData.width + x) * stride;
         return uint8Clamped[index] === colorRGBA[0] &&
             uint8Clamped[index + 1] === colorRGBA[1] &&
             uint8Clamped[index + 2] === colorRGBA[2] &&
@@ -165,32 +165,57 @@ GameStates.makeLevel1 = (game, shared) => {
         return x >= 0 && x < width && y >= 0 && y < height;
     }
 
-    function floodFill(x, y, bitMapData, boundaryColor, visitedPixels) {
+    const DIRECTIONS = {
+        up: [0, -1],
+        down: [0, 1],
+        left: [-1, 0],
+        right: [1, 0],
+        upleft: [-1, -1],
+        upright: [1, -1],
+        downleft: [-1, 1],
+        downright: [1, 1],
+    };
+
+    // Manually verified for the raster-scan + flood-fill variant `leakyFloodFill` (spillage = 3) on the ForestTree*.png compact spritesheets.
+    const SPRITESHEET_INDICES = {
+        FALLEN_LOG: 0,
+        SHRUB_SMALL: 1,
+        STUMP: 2,
+        PINE_LARGE: 3,
+        SHRUB_LARGE: 4,
+        SHRUB_MEDIUM: 5,
+        TREE_LARGE: 6,
+        STUMP_FUNGUS: 7,
+        MUSHROOM_LARGE: 8,
+        SHRUB_THIN: 9,
+        MUSHROOM_SMALL: 10,
+        TREE_MEDIUM: 11,
+        BERRY_2: 12,
+        BERRY_1: 13,
+        BERRY_SMALL: 14,
+        PINE_SMALL: 15,
+        TREE_SMALL: 16,
+    };
+
+    function leakyFloodFill(x, y, bitMapData, boundaryColor, visitedPixels, spillage = 0) {
         let spritePixels = [];
         let queue = [];
-        const directions = {
-            up: [0, -1],
-            down: [0, 1],
-            left: [-1, 0],
-            right: [1, 0],
-            upleft: [-1, -1],
-            upright: [1, -1],
-            downleft: [-1, 1],
-            downright: [1, 1],
-        }
         const enqueueUnvisitedNeighborsOf = (x, y) => {
-            for (const [dx, dy] of Object.values(directions)) {
-                const newPosition = [x + dx, y + dy];
-                if (
-                    visitedPixels.has(JSON.stringify(newPosition)) ||
-                    !inBounds(...newPosition, bitMapData.width, bitMapData.height) ||
-                    fastEqualsRGBA(...newPosition, bitMapData, boundaryColor)
-                ) {
-                    continue;
+            // if spillage > 0, add extra iteration(s) to check an extra pixel away from the first background pixel found.
+            for (let spillDistance = 1; spillDistance <= spillage + 1; spillDistance++) {
+                for (const [dx, dy] of Object.values(DIRECTIONS)) {
+                    const newPosition = [x + dx * spillDistance, y + dy * spillDistance];
+                    if (
+                        visitedPixels.has(JSON.stringify(newPosition)) ||
+                        !inBounds(...newPosition, bitMapData.width, bitMapData.height) ||
+                        fastEqualsRGBA(...newPosition, bitMapData, boundaryColor)
+                    ) {
+                        continue;
+                    }
+                    queue.push(newPosition);
+                    // pre-emptively add new pixels now to avoid recursively queueing neighboring pixels.
+                    visitedPixels.add(JSON.stringify(newPosition));
                 }
-                queue.push(newPosition);
-                // pre-emptively add new pixels now to avoid recursively queueing neighboring pixels.
-                visitedPixels.add(JSON.stringify(newPosition));
             }
         };
         enqueueUnvisitedNeighborsOf(x, y);
@@ -225,7 +250,7 @@ GameStates.makeLevel1 = (game, shared) => {
             for (let x = 0; x < bitMapData.width; x++) {
                 if (visitedPixels.has(JSON.stringify([x, y])) || fastEqualsRGBA(x, y, bitMapData, backgroundColor)) continue;
                 visitedPixels.add(JSON.stringify([x, y]));
-                const spritePixels = floodFill(x, y, bitMapData, backgroundColor, visitedPixels);
+                const spritePixels = leakyFloodFill(x, y, bitMapData, backgroundColor, visitedPixels, 3);
                 tileSpriteIndex.push(spritePixels);
                 spritePixels.forEach(([x, y]) => visitedPixels.add(JSON.stringify([x, y])));
             }
@@ -234,14 +259,79 @@ GameStates.makeLevel1 = (game, shared) => {
         return tileSpriteIndex;
     }
 
+    function saveTileSpriteIndexAsPng(tileSpriteIndex, imageKey, fileName) {
+        const image = game.cache.getImage(imageKey);
+        const colorizedSpriteSheet = game.make.bitmapData(
+            image.width,
+            image.height,
+        );
+
+        tileSpriteIndex.forEach((spritePixels, index) => {
+            const hue =
+                tileSpriteIndex.length === 1
+                    ? 0
+                    : (index / (tileSpriteIndex.length - 1)) * 270;
+            const chroma = 1;
+            const hueSegment = hue / 60;
+            const secondary = 1 - Math.abs((hueSegment % 2) - 1);
+            let red = 0;
+            let green = 0;
+            let blue = 0;
+
+            if (hueSegment < 1) {
+                red = chroma;
+                green = secondary;
+            } else if (hueSegment < 2) {
+                red = secondary;
+                green = chroma;
+            } else if (hueSegment < 3) {
+                green = chroma;
+                blue = secondary;
+            } else if (hueSegment < 4) {
+                green = secondary;
+                blue = chroma;
+            } else {
+                red = secondary;
+                blue = chroma;
+            }
+
+            spritePixels.forEach(([x, y]) => {
+                colorizedSpriteSheet.setPixel(
+                    x,
+                    y,
+                    Math.round(red * 255),
+                    Math.round(green * 255),
+                    Math.round(blue * 255),
+                    255,
+                );
+            });
+        });
+
+        colorizedSpriteSheet.update();
+
+        const downloadLink = document.createElement('a');
+        downloadLink.href = colorizedSpriteSheet.canvas.toDataURL('image/png');
+        downloadLink.download = fileName;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+
+        colorizedSpriteSheet.destroy();
+    }
+
     return {
         create() {
             game.physics.startSystem(Phaser.Physics.ARCADE);
 
             game.stage.backgroundColor = '#abb4cc';
 
-            // TODO: save to JSON, track in git, load and blit to test screen to validate.
             const tileSpriteIndex = getTileSpriteIndex('ForestTreeFront');
+
+            // saveTileSpriteIndexAsPng(
+            //     tileSpriteIndex,
+            //     'ForestTreeFront',
+            //     'ForestTreeFront-sprite-islands.png',
+            // );
 
             this.back = this.game.add.tileSprite(
                 0,
