@@ -165,6 +165,7 @@ GameStates.makeLevel1 = (game, shared) => {
         return x >= 0 && x < width && y >= 0 && y < height;
     }
 
+    // Adacent indices including diagonals for flood-fill variant.
     const DIRECTIONS = {
         up: [0, -1],
         down: [0, 1],
@@ -176,7 +177,7 @@ GameStates.makeLevel1 = (game, shared) => {
         downright: [1, 1],
     };
 
-    // Manually verified for the raster-scan + flood-fill variant `leakyFloodFill` (spillage = 3) on the ForestTree*.png compact spritesheets.
+    // Manually verified for the raster-scan + flood-fill variant (`getTileSpriteIndex` + `leakyFloodFill`, spillage = 3) on the ForestTree*.png compact spritesheets.
     const SPRITESHEET_INDICES = {
         FALLEN_LOG: 0,
         SHRUB_SMALL: 1,
@@ -197,7 +198,7 @@ GameStates.makeLevel1 = (game, shared) => {
         TREE_SMALL: 16,
     };
 
-    function leakyFloodFill(x, y, bitMapData, boundaryColor, visitedPixels, spillage = 0) {
+    function leakyFloodFill(x, y, bitMapData, boundaryColor, visitedPixels, spillage) {
         let spritePixels = [];
         let queue = [];
         const enqueueUnvisitedNeighborsOf = (x, y) => {
@@ -231,7 +232,7 @@ GameStates.makeLevel1 = (game, shared) => {
         return spritePixels;
     }
 
-    function getTileSpriteIndex(imageKey) {
+    function getTileSpriteIndex(imageKey, floodFillSpillage = 3) {
         // All sprites are the exact same shape in the same layout for each layer, so the index will be uniform across them.
         const image = game.cache.getImage(imageKey);
 
@@ -250,7 +251,7 @@ GameStates.makeLevel1 = (game, shared) => {
             for (let x = 0; x < bitMapData.width; x++) {
                 if (visitedPixels.has(JSON.stringify([x, y])) || fastEqualsRGBA(x, y, bitMapData, backgroundColor)) continue;
                 visitedPixels.add(JSON.stringify([x, y]));
-                const spritePixels = leakyFloodFill(x, y, bitMapData, backgroundColor, visitedPixels, 3);
+                const spritePixels = leakyFloodFill(x, y, bitMapData, backgroundColor, visitedPixels, floodFillSpillage);
                 tileSpriteIndex.push(spritePixels);
                 spritePixels.forEach(([x, y]) => visitedPixels.add(JSON.stringify([x, y])));
             }
@@ -319,19 +320,66 @@ GameStates.makeLevel1 = (game, shared) => {
         colorizedSpriteSheet.destroy();
     }
 
+    function spriteExtent(spritePixels) {
+        const minX = spritePixels.reduce((accumulator, [x, _]) => {
+            return x < accumulator ? x : accumulator;
+        }, spritePixels[0][0]);
+
+        const maxX = spritePixels.reduce((accumulator, [x, _]) => {
+            return x > accumulator ? x : accumulator;
+        }, spritePixels[0][0]);
+
+        const minY = spritePixels.reduce((accumulator, [_, y]) => {
+            return y < accumulator ? y : accumulator;
+        }, spritePixels[0][1]);
+
+        const maxY = spritePixels.reduce((accumulator, [_, y]) => {
+            return y > accumulator ? y : accumulator;
+        }, spritePixels[0][1]);
+
+        return { diff: [maxX - minX, maxY - minY], minX, minY, maxX, maxY };
+    }
+
+    function spritePixelsToBitMapData(spritePixels, imageKey) {
+        const sourceSpriteSheet = game.cache.getImage(imageKey);
+
+        const extent = spriteExtent(spritePixels);
+
+        // Only copy what we need, which is the rectuangular boundary defined by the difference of the extent of the sprite.
+        const destinationSprite = game.make.bitmapData(...extent.diff);
+
+        destinationSprite.copyRect(
+            sourceSpriteSheet,
+            new Phaser.Rectangle(extent.minX, extent.minY, ...extent.diff),
+            0,
+            0,
+        );
+        destinationSprite.update();
+
+        return destinationSprite;
+    }
+
+    function createTileSpriteCache(tileSpriteIndex, imageKey) {
+        Object.entries(SPRITESHEET_INDICES).forEach(([key, value]) => {
+            // imageKey will be the key of the spritesheet that was selected, the key is from the name of the exact sprite.
+            // Together, they create a unique key for each individual sprite.
+            game.cache.addImage(imageKey + '_' + key, null, spritePixelsToBitMapData(tileSpriteIndex[value], imageKey).canvas);
+        });
+    }
+
+
     return {
         create() {
             game.physics.startSystem(Phaser.Physics.ARCADE);
 
             game.stage.backgroundColor = '#abb4cc';
 
+            // The tile sprite index contains only pixel indices which will be the same across all layers.
+            // These require the game object to be valid, so the Preloader can't be used.
             const tileSpriteIndex = getTileSpriteIndex('ForestTreeFront');
-
-            // saveTileSpriteIndexAsPng(
-            //     tileSpriteIndex,
-            //     'ForestTreeFront',
-            //     'ForestTreeFront-sprite-islands.png',
-            // );
+            createTileSpriteCache(tileSpriteIndex, 'ForestTreeBack');
+            createTileSpriteCache(tileSpriteIndex, 'ForestTreeMid');
+            createTileSpriteCache(tileSpriteIndex, 'ForestTreeFront');
 
             this.back = this.game.add.tileSprite(
                 0,
